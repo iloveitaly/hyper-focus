@@ -1,0 +1,8 @@
+- [ ] switch config to json, since there is a built-in decoder
+- [ ] add a way to pause, maybe a cli argument or something?
+- [ ] track initial wake
+- [ ] execute wake and initial wake
+- [ ] add a timer to track current schedule and switch application state
+- [ ] support host blocking and url blocking
+- [ ] launch daemon config from sleepwatcher
+- [ ] brew installation
