@@ -344,10 +344,15 @@ enum ActionHandler {
   }
 
   static func browserAction(_ data: NetworkMessage) -> Bool {
-        if extractHost(data.url ?? "") == "mail.google.com" {
+    guard let url = data.url else {
+      log("url is empty, not doing anything")
+      return false
+    }
+
+    if extractHost(url) == "mail.google.com" {
       error("blocked url")
       let redirectUrl: String? = "about:blank"
-      // activeTab.setURL!(redirectUrl)
+      // data.activeTab.setURL!(redirectUrl)
     }
 
     return true
