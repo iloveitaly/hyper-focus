@@ -9,66 +9,7 @@ public struct focus_app {
 import Cocoa
 import ScriptingBridge
 
-// @objc protocol ChromeTab {
-//   @objc optional var URL: String { get }
-//   @objc optional var title: String { get }
-// }
-
-// @objc protocol ChromeWindow {
-//   @objc optional var activeTab: ChromeTab { get }
-//   @objc optional var mode: String { get }
-// }
-
-// extension SBObject: ChromeWindow, ChromeTab {}
-
-// @objc protocol ChromeProtocol {
-//   @objc optional func windows() -> [ChromeWindow]
-// }
-
-// extension SBApplication: ChromeProtocol {}
-
 // https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
-
-@objc public protocol SafariDocument {
-  @objc optional var name: String { get } // Its name.
-  @objc optional var modified: Bool { get } // Has it been modified since the last save?
-  @objc optional var file: URL { get } // Its location on disk, if it has one.
-  @objc optional var source: String { get } // The HTML source of the web page currently loaded in the document.
-  @objc optional var URL: String { get } // The current URL of the document.
-  @objc optional var text: String { get } // The text of the web page currently loaded in the document. Modifications to text aren't reflected on the web page.
-  @objc optional func setURL(_ URL: String!) // The current URL of the document.
-}
-
-@objc public protocol SafariTab {
-  @objc optional var source: String { get } // The HTML source of the web page currently loaded in the tab.
-  @objc optional var URL: String { get } // The current URL of the tab.
-  @objc optional var index: NSNumber { get } // The index of the tab, ordered left to right.
-  @objc optional var text: String { get } // The text of the web page currently loaded in the tab. Modifications to text aren't reflected on the web page.
-  @objc optional var visible: Bool { get } // Whether the tab is currently visible.
-  @objc optional var name: String { get } // The name of the tab.
-  @objc optional func setURL(_ URL: String!) // The current URL of the tab.
-}
-
-@objc public protocol SafariWindow {
-  @objc optional var name: String { get } // The title of the window.
-  @objc optional func id() -> Int // The unique identifier of the window.
-  @objc optional var index: Int { get } // The index of the window, ordered front to back.
-  @objc optional var document: SafariDocument { get } // The document whose contents are displayed in the window.
-  @objc optional func tabs() -> SBElementArray
-  @objc optional var currentTab: SafariTab { get } // The current tab.
-}
-
-extension SBObject: SafariWindow {}
-
-@objc public protocol SafariApplication {
-  @objc optional func documents() -> SBElementArray
-  @objc optional func windows() -> [SafariWindow]
-  @objc optional var name: String { get } // The name of the application.
-  @objc optional var frontmost: Bool { get } // Is this the active application?
-}
-
-extension SBApplication: SafariApplication {}
-
 
 enum BrowserTab {
   case chrome(GoogleChromeTab)
@@ -220,7 +161,7 @@ class MainThing {
 
       let safariObject: SafariApplication = SBApplication(bundleIdentifier: bundleIdentifier)!
 
-      let frontWindow = safariObject.windows!()[0]
+      let frontWindow = safariObject.windows!()[0] as! SafariWindow
       let activeTab = frontWindow.currentTab!
 
       data.url = activeTab.URL
