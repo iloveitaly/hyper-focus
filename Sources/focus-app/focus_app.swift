@@ -9,23 +9,23 @@ public struct focus_app {
 import Cocoa
 import ScriptingBridge
 
-@objc protocol ChromeTab {
-  @objc optional var URL: String { get }
-  @objc optional var title: String { get }
-}
+// @objc protocol ChromeTab {
+//   @objc optional var URL: String { get }
+//   @objc optional var title: String { get }
+// }
 
-@objc protocol ChromeWindow {
-  @objc optional var activeTab: ChromeTab { get }
-  @objc optional var mode: String { get }
-}
+// @objc protocol ChromeWindow {
+//   @objc optional var activeTab: ChromeTab { get }
+//   @objc optional var mode: String { get }
+// }
 
-extension SBObject: ChromeWindow, ChromeTab {}
+// extension SBObject: ChromeWindow, ChromeTab {}
 
-@objc protocol ChromeProtocol {
-  @objc optional func windows() -> [ChromeWindow]
-}
+// @objc protocol ChromeProtocol {
+//   @objc optional func windows() -> [ChromeWindow]
+// }
 
-extension SBApplication: ChromeProtocol {}
+// extension SBApplication: ChromeProtocol {}
 
 // https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
 
@@ -71,7 +71,7 @@ extension SBApplication: SafariApplication {}
 
 
 enum BrowserTab {
-  case chrome(ChromeTab)
+  case chrome(GoogleChromeTab)
   case safari(SafariTab)
 }
 
@@ -208,10 +208,10 @@ class MainThing {
     if chromeBrowsers.contains(frontmost.localizedName!) {
       debug("Chrome browser detected, extracting URL and title")
 
-      let chromeObject: ChromeProtocol = SBApplication(bundleIdentifier: bundleIdentifier)!
+      let chromeObject: GoogleChromeApplication = SBApplication(bundleIdentifier: bundleIdentifier)!
 
-      let frontWindow = chromeObject.windows!()[0]
-      let activeTab = frontWindow.activeTab!
+      let frontWindow: GoogleChromeWindow = chromeObject.windows!()[0] as! GoogleChromeWindow
+      let activeTab: GoogleChromeTab = frontWindow.activeTab!
 
       data.url = activeTab.URL
       data.activeTab = BrowserTab.chrome(activeTab)
@@ -354,10 +354,27 @@ enum ActionHandler {
       return false
     }
 
-    if extractHost(url) == "mail.google.com" {
+    guard let host = extractHost(url) else {
+      error("no host in url")
+      return false
+    }
+
+    if data.configuration.block_hosts.contains(host) {
       error("blocked url")
+
+      // TODO allow redirect to be configured
       let redirectUrl: String? = "about:blank"
-      // data.activeTab.setURL!(redirectUrl)
+
+      // TODO I don't know how to more elegantly unwrap the enum here...
+      switch data.activeTab {
+        case let .chrome(tab):
+          tab.setURL!(redirectUrl)
+        case let .safari(tab):
+          tab.setURL!(redirectUrl)
+        // TODO firefox?
+        case .none:
+          break
+      }
     }
 
     return true
