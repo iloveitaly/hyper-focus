@@ -1,9 +1,9 @@
 @main
-public struct focus_app {
-    public static func main() {
-        start()
-        RunLoop.main.run()
-    }
+public enum focus_app {
+  public static func main() {
+    start()
+    RunLoop.main.run()
+  }
 }
 
 import Cocoa
@@ -59,7 +59,7 @@ func error(_ msg: String) {
 let main = MainThing()
 
 struct Configuration: Codable {
-  struct ScheduleItem: Codable {
+  struct ScheduleItem: Codable, Equatable {
     var start: Int
     var end: Int
     var block_hosts: [String]
@@ -90,7 +90,12 @@ func start() {
   // TODO: could allow for a ui and storing config outside of the default location
   let configuration = loadConfigurationFromCommandLine()
   main.configuration = configuration
-  main.currentSchedule = configuration.schedule[0]
+
+  let scheduleManager = ScheduleManager(
+    configuration: configuration,
+    windowWatcher: main
+  )
+  scheduleManager.checkSchedule()
 
   // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
   // listen for changes in focused application
@@ -112,22 +117,80 @@ func start() {
   main.focusedAppChanged()
 }
 
+class ScheduleManager {
+  let configuration: Configuration
+  let windowWatcher: MainThing
+
+  init(configuration: Configuration, windowWatcher: MainThing) {
+    self.configuration = configuration
+    self.windowWatcher = windowWatcher
+
+    // setup timer to check if we need to change the schedule
+    Timer.scheduledTimer(
+      timeInterval: 60,
+      target: self,
+      selector: #selector(fireTimer),
+      userInfo: nil,
+      repeats: true
+    )
+  }
+
+  @objc func fireTimer(timer _: Timer) {
+    checkSchedule()
+  }
+
+  func checkSchedule() {
+    let now = Date()
+    let calendar = Calendar.current
+    let hour = calendar.component(.hour, from: now)
+
+    // select all schedules where the hour is greater than the start time
+    let schedules = configuration.schedule.filter { hour >= $0.start && hour <= $0.end }
+
+    if schedules.count > 1 {
+      error("More than one schedule is active, this is not supported")
+      return
+    }
+
+    // is the selected schedule different than the current one?
+    if let schedule = schedules.first, schedule != windowWatcher.currentSchedule {
+      log("changing schedule to \(schedule)")
+      // TODO there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
+      windowWatcher.currentSchedule = schedule
+    }
+  }
+}
+
 class MainThing {
   var observer: AXObserver?
   var oldWindow: AXUIElement?
   var configuration: Configuration?
   var currentSchedule: Configuration.ScheduleItem?
 
+  // list of chrome equivalent browsers
+  let CHROME_BROWSERS = [
+    "Google Chrome",
+    "Google Chrome Canary",
+    "Chromium",
+    "Brave Browser",
+  ]
+
+  func hasActiveSchedule() -> Bool {
+    return currentSchedule != nil
+  }
+
   func windowTitleChanged(
     _: AXObserver,
     axElement: AXUIElement,
     notification _: CFString
   ) {
+    guard hasActiveSchedule() else {
+      debug("no active schedule, not processing events")
+      return
+    }
+
     let frontmost = NSWorkspace.shared.frontmostApplication!
     let bundleIdentifier = frontmost.bundleIdentifier!
-
-    // calculate now before executing any scripting since that can take some time
-    let nowTime = Date.now
 
     var windowTitle: AnyObject?
     AXUIElementCopyAttributeValue(axElement, kAXTitleAttribute as CFString, &windowTitle)
@@ -138,15 +201,7 @@ class MainThing {
       configuration: currentSchedule!
     )
 
-    // list of chrome equivalent browsers
-    let chromeBrowsers = [
-      "Google Chrome",
-      "Google Chrome Canary",
-      "Chromium",
-      "Brave Browser",
-    ]
-
-    if chromeBrowsers.contains(frontmost.localizedName!) {
+    if CHROME_BROWSERS.contains(frontmost.localizedName!) {
       debug("Chrome browser detected, extracting URL and title")
 
       let chromeObject: GoogleChromeApplication = SBApplication(bundleIdentifier: bundleIdentifier)!
@@ -269,7 +324,7 @@ enum ActionHandler {
   static func handleAction(_ data: NetworkMessage) {
     log("handling action: \(data)")
 
-    if appAction(data) { return}
+    if appAction(data) { return }
 
     browserAction(data)
   }
@@ -301,20 +356,20 @@ enum ActionHandler {
     }
 
     if data.configuration.block_hosts.contains(host) {
-      error("blocked url")
+      error("blocked url, redirecting browser to block page")
 
-      // TODO allow redirect to be configured
+      // TODO: allow redirect to be configured
       let redirectUrl: String? = "about:blank"
 
-      // TODO I don't know how to more elegantly unwrap the enum here...
+      // TODO: I don't know how to more elegantly unwrap the enum here...
       switch data.activeTab {
-        case let .chrome(tab):
-          tab.setURL!(redirectUrl)
-        case let .safari(tab):
-          tab.setURL!(redirectUrl)
-        // TODO firefox?
-        case .none:
-          break
+      case let .chrome(tab):
+        tab.setURL!(redirectUrl)
+      case let .safari(tab):
+        tab.setURL!(redirectUrl)
+      // TODO: firefox?
+      case .none:
+        break
       }
     }
 
