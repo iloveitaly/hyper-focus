@@ -1,10 +1,12 @@
-- [ ] switch config to json, since there is a built-in decoder
-- [ ] decouple json config to allow for a ui in the futurre
+- [ ] extract out logging into separate file
+- [ ] support host blocking and url blocking
 - [ ] add a way to pause, maybe a cli argument or something?
+  - [ ] maybe a web API or applescript api
+  - [ ] https://building42.github.io/Telegraph/
 - [ ] track initial wake
 - [ ] execute wake and initial wake
-- [ ] add a timer to track current schedule and switch application state
-- [ ] support host blocking and url blocking
-- [ ] hide app if it is on the blocklist and switched to
 - [ ] launch daemon config from sleepwatcher
 - [ ] brew installation
+- [ ] block urls that are a partial match: if the path and query string in the block entry are contained in the current URL, it's a match.
+  - [ ] Would be cool to have a regex match
+- [ ] macos notification when new schedule is enabled
