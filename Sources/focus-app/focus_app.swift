@@ -1,3 +1,6 @@
+import Cocoa
+import ScriptingBridge
+
 @main
 public enum focus_app {
   public static func main() {
@@ -5,9 +8,6 @@ public enum focus_app {
     RunLoop.main.run()
   }
 }
-
-import Cocoa
-import ScriptingBridge
 
 // https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
 
