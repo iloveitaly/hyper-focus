@@ -16,6 +16,7 @@ enum BrowserTab {
   case safari(SafariTab)
 }
 
+// TODO need to rename
 struct NetworkMessage {
   let app: String
   let title: String
@@ -62,6 +63,7 @@ struct Configuration: Codable {
   struct ScheduleItem: Codable, Equatable {
     var start: Int
     var end: Int
+    var name: String
     var block_hosts: [String]
     var block_urls: [String]
     var block_apps: [String]
@@ -81,6 +83,7 @@ func loadConfigurationFromCommandLine() -> Configuration {
 
 func start() {
   guard checkAccess() else {
+    // TODO I don't really know what this dispatchqueue business does
     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
       start()
     }
@@ -88,6 +91,7 @@ func start() {
   }
 
   // TODO: could allow for a ui and storing config outside of the default location
+  // TODO add `www` variant to all hosts
   let configuration = loadConfigurationFromCommandLine()
   main.configuration = configuration
 
@@ -96,6 +100,9 @@ func start() {
     windowWatcher: main
   )
   scheduleManager.checkSchedule()
+  scheduleManager.scheduleOverride(name: "hyper focus", end: Date().addingTimeInterval(60 * 60))
+
+  SleepWatcher(scheduleManager: scheduleManager)
 
   // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
   // listen for changes in focused application
@@ -106,20 +113,32 @@ func start() {
     object: nil
   )
 
-  // TODO: for sleep watcher replacement
-  // NSWorkspace.shared.notificationCenter.addObserver(
-  //   main,
-  //   selector: #selector(main.focusedAppChanged),
-  //   name: NSWorkspace.didWakeNotification,
-  //   object: nil
-  // )
-
   main.focusedAppChanged()
+}
+
+class SleepWatcher {
+  let scheduleManager: ScheduleManager
+
+  init(scheduleManager: ScheduleManager) {
+    self.scheduleManager = scheduleManager
+
+    NSWorkspace.shared.notificationCenter.addObserver(
+      main,
+      selector: #selector(self.awakeFromSleep),
+      name: NSWorkspace.didWakeNotification,
+      object: nil
+    )
+  }
+
+  @objc func awakeFromSleep() {
+    log("awake from sleep")
+  }
 }
 
 class ScheduleManager {
   let configuration: Configuration
   let windowWatcher: MainThing
+  var endOverride: Date?
 
   init(configuration: Configuration, windowWatcher: MainThing) {
     self.configuration = configuration
@@ -139,8 +158,30 @@ class ScheduleManager {
     checkSchedule()
   }
 
+  func scheduleOverride(name: String, end: Date) {
+    // find a schedule with a name that matches the `name` parameter
+    let schedule = configuration.schedule.first { $0.name == name }
+
+    if let schedule = schedule {
+      setSchedule(schedule)
+    } else {
+      error("no schedule with name \(name)")
+    }
+  }
+
   func checkSchedule() {
     let now = Date()
+
+    if endOverride != nil && now >= endOverride! {
+      log("override date has passed, removing override")
+      endOverride = nil
+    }
+
+    if endOverride != nil {
+      log("currently in schedule override, skipping schedule check")
+      return
+    }
+
     let calendar = Calendar.current
     let hour = calendar.component(.hour, from: now)
 
@@ -155,9 +196,13 @@ class ScheduleManager {
     // is the selected schedule different than the current one?
     if let schedule = schedules.first, schedule != windowWatcher.currentSchedule {
       log("changing schedule to \(schedule)")
-      // TODO there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
-      windowWatcher.currentSchedule = schedule
+      setSchedule(schedule)
     }
+  }
+
+  func setSchedule(_ schedule: Configuration.ScheduleItem) {
+    // TODO there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
+    windowWatcher.currentSchedule = schedule
   }
 }
 
