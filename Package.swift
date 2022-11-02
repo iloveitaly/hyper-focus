@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "focus-app",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v10_14)
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
