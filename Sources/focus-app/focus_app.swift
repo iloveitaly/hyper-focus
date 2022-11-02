@@ -5,6 +5,7 @@ import ScriptingBridge
 public enum focus_app {
   public static func main() {
     start()
+    ApiServer()
     RunLoop.main.run()
   }
 }
