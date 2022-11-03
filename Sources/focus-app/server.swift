@@ -1,13 +1,33 @@
 import Embassy
 import Ambassador
 import Foundation
+import Telegraph
 
 class ApiServer {
   let scheduleManager: ScheduleManager
 
+  // http -vvv GET http://localhost:8081/ping
+  func old() {
+    let server = Server()
+    server.route(.GET, "/ping") { (.ok, "Server is running") }
+    server.route(.GET, "ping") { (.ok, "Server is running") }
+
+    Task {
+      do {
+        try server.start(port: 8081, interface: "localhost")
+        server.route(.GET, "/ping") { (.ok, "Server is running") }
+        server.route(.GET, "ping") { (.ok, "Server is running") }
+        print("started server")
+      } catch {
+        print("Server start error: \(error)")
+      }
+    }
+  }
+
   init(scheduleManager: ScheduleManager) {
     self.scheduleManager = scheduleManager
 
+    old()
     Task {
       let loop = try! SelectorEventLoop(selector: try! KqueueSelector())
       let router = Router()
