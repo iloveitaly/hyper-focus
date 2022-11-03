@@ -5,7 +5,6 @@ import ScriptingBridge
 public enum focus_app {
   public static func main() {
     start()
-    ApiServer()
     RunLoop.main.run()
   }
 }
@@ -62,9 +61,9 @@ let main = MainThing()
 
 struct Configuration: Codable {
   struct ScheduleItem: Codable, Equatable {
-    var start: Int
-    var end: Int
-    var name: String
+    var start: Int?
+    var end: Int?
+    var name: String?
     var block_hosts: [String]
     var block_urls: [String]
     var block_apps: [String]
@@ -101,9 +100,12 @@ func start() {
     windowWatcher: main
   )
   scheduleManager.checkSchedule()
+
+  // TODO temp override
   scheduleManager.scheduleOverride(name: "hyper focus", end: Date().addingTimeInterval(60 * 60))
 
   SleepWatcher(scheduleManager: scheduleManager)
+  ApiServer(scheduleManager: scheduleManager)
 
   // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
   // listen for changes in focused application
@@ -141,6 +143,12 @@ class ScheduleManager {
   let windowWatcher: MainThing
   var endOverride: Date?
 
+  let BLANK_SCHEDULE = Configuration.ScheduleItem(
+    block_hosts: [],
+    block_urls: [],
+    block_apps: []
+  )
+
   init(configuration: Configuration, windowWatcher: MainThing) {
     self.configuration = configuration
     self.windowWatcher = windowWatcher
@@ -159,11 +167,18 @@ class ScheduleManager {
     checkSchedule()
   }
 
+  func pauseBlocking(_ end: Date) {
+    log("pause blocking until \(end)")
+    endOverride = end
+    setSchedule(self.BLANK_SCHEDULE)
+  }
+
   func scheduleOverride(name: String, end: Date) {
     // find a schedule with a name that matches the `name` parameter
     let schedule = configuration.schedule.first { $0.name == name }
 
     if let schedule = schedule {
+      endOverride = end
       setSchedule(schedule)
     } else {
       error("no schedule with name \(name)")
@@ -187,7 +202,7 @@ class ScheduleManager {
     let hour = calendar.component(.hour, from: now)
 
     // select all schedules where the hour is greater than the start time
-    let schedules = configuration.schedule.filter { hour >= $0.start && hour <= $0.end }
+    let schedules = configuration.schedule.filter { $0.start != nil && $0.end != nil && hour >= $0.start! && hour <= $0.end! }
 
     if schedules.count > 1 {
       error("More than one schedule is active, this is not supported")
