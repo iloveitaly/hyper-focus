@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "embassy",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/envoy/Embassy.git",
+      "state" : {
+        "revision" : "72e53b2b76023556febdfe0cf5bc8d64018f9c18",
+        "version" : "4.1.4"
+      }
+    },
+    {
       "identity" : "httpparserc",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Building42/HTTPParserC.git",
