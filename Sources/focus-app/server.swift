@@ -1,5 +1,5 @@
-import Telegraph
 import Embassy
+import Ambassador
 import Foundation
 
 class ApiServer {
@@ -10,26 +10,30 @@ class ApiServer {
 
     Task {
       let loop = try! SelectorEventLoop(selector: try! KqueueSelector())
-      let server = DefaultHTTPServer(eventLoop: loop, port: 8080) {
-          (
-              environ: [String: Any],
-              startResponse: ((String, [(String, String)]) -> Void),
-              sendBody: ((Data) -> Void)
-          ) in
+      let router = Router()
+      let server = DefaultHTTPServer(eventLoop: loop, port: 8080, app: router.app)
 
-          let input = environ["swsgi.input"] as! SWSGIInput
-          input { data in
-              print("Received data: \(data)")
-              // handle the body data here
+      router["/pause"] = JSONResponse() { environ -> Any in
+        let input = environ["swsgi.input"] as! SWSGIInput
+
+        var receivedData: [String: Int];
+        JSONReader.read(input) { json in
+          guard let receivedData = json as? [String: Int] else {
+            return
           }
 
-          startResponse("200 OK", [])
-          sendBody(Data("the path you're visiting is \(environ)".utf8))
-          sendBody(Data())
+          print("Received data: \(json)")
+          // let timestamp = json["until"] as! Int
 
           // 5 minutes from now
           let fiveMinutesFromNow = Date().addingTimeInterval(60 * 5)
           self.scheduleManager.pauseBlocking(fiveMinutesFromNow)
+        }
+
+        // return empty dictionary
+        return [:]
+
+        // return ["hi"]
       }
 
       // Start HTTP server to listen on the port
