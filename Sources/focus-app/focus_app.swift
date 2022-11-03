@@ -58,8 +58,6 @@ func error(_ msg: String) {
   print("\(logPrefix("ERROR")) \(msg)")
 }
 
-let main = MainThing()
-
 struct Configuration: Codable {
   struct ScheduleItem: Codable, Equatable {
     var start: Int?
@@ -82,6 +80,8 @@ func loadConfigurationFromCommandLine() -> Configuration {
   return config
 }
 
+var main: MainThing?
+
 func start() {
   guard checkAccess() else {
     // TODO I don't really know what this dispatchqueue business does
@@ -94,16 +94,16 @@ func start() {
   // TODO: could allow for a ui and storing config outside of the default location
   // TODO add `www` variant to all hosts
   let configuration = loadConfigurationFromCommandLine()
-  main.configuration = configuration
 
   let scheduleManager = ScheduleManager(
-    configuration: configuration,
-    windowWatcher: main
+    configuration: configuration
   )
   scheduleManager.checkSchedule()
 
-  // TODO temp override
-  // scheduleManager.scheduleOverride(name: "hyper focus", end: Date().addingTimeInterval(60 * 60))
+  main = MainThing(
+    scheduleManager: scheduleManager,
+    configuration: configuration
+  )
 
   SleepWatcher(scheduleManager: scheduleManager)
   ApiServer(scheduleManager: scheduleManager)
@@ -111,13 +111,13 @@ func start() {
   // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
   // listen for changes in focused application
   NSWorkspace.shared.notificationCenter.addObserver(
-    main,
-    selector: #selector(main.focusedAppChanged),
+    main!,
+    selector: #selector(main!.focusedAppChanged),
     name: NSWorkspace.didActivateApplicationNotification,
     object: nil
   )
 
-  main.focusedAppChanged()
+  main!.focusedAppChanged()
 }
 
 class SleepWatcher {
@@ -127,7 +127,7 @@ class SleepWatcher {
     self.scheduleManager = scheduleManager
 
     NSWorkspace.shared.notificationCenter.addObserver(
-      main,
+      self,
       selector: #selector(self.awakeFromSleep),
       name: NSWorkspace.didWakeNotification,
       object: nil
@@ -141,8 +141,10 @@ class SleepWatcher {
 
 class ScheduleManager {
   let configuration: Configuration
-  let windowWatcher: MainThing
+
+  var schedule: Configuration.ScheduleItem?
   var endOverride: Date?
+  var endPause: Date?
 
   let BLANK_SCHEDULE = Configuration.ScheduleItem(
     block_hosts: [],
@@ -150,9 +152,8 @@ class ScheduleManager {
     block_apps: []
   )
 
-  init(configuration: Configuration, windowWatcher: MainThing) {
+  init(configuration: Configuration) {
     self.configuration = configuration
-    self.windowWatcher = windowWatcher
 
     // setup timer to check if we need to change the schedule
     Timer.scheduledTimer(
@@ -170,8 +171,7 @@ class ScheduleManager {
 
   func pauseBlocking(_ end: Date) {
     log("pause blocking until \(end)")
-    endOverride = end
-    setSchedule(self.BLANK_SCHEDULE)
+    endPause = end
   }
 
   func namedSchedules() -> [Configuration.ScheduleItem] {
@@ -217,7 +217,7 @@ class ScheduleManager {
     }
 
     // is the selected schedule different than the current one?
-    if let schedule = schedules.first, schedule != windowWatcher.currentSchedule {
+    if let schedule = schedules.first, schedule != self.schedule {
       log("changing schedule to \(schedule)")
       setSchedule(schedule)
     }
@@ -225,15 +225,24 @@ class ScheduleManager {
 
   func setSchedule(_ schedule: Configuration.ScheduleItem) {
     // TODO there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
-    windowWatcher.currentSchedule = schedule
+    self.schedule = schedule
+  }
+
+  func getSchedule() -> Configuration.ScheduleItem? {
+    if endPause != nil && Date() < endPause! {
+      return self.BLANK_SCHEDULE
+    }
+
+    return self.schedule
   }
 }
 
 class MainThing {
   var observer: AXObserver?
   var oldWindow: AXUIElement?
-  var configuration: Configuration?
-  var currentSchedule: Configuration.ScheduleItem?
+
+  let configuration: Configuration
+  let scheduleManager: ScheduleManager
 
   // list of chrome equivalent browsers
   let CHROME_BROWSERS = [
@@ -243,8 +252,13 @@ class MainThing {
     "Brave Browser",
   ]
 
+  init(scheduleManager: ScheduleManager, configuration: Configuration) {
+    self.scheduleManager = scheduleManager
+    self.configuration = configuration
+  }
+
   func hasActiveSchedule() -> Bool {
-    return currentSchedule != nil
+    return scheduleManager.getSchedule() != nil
   }
 
   func windowTitleChanged(
@@ -266,7 +280,7 @@ class MainThing {
     var data = NetworkMessage(
       app: frontmost.localizedName!,
       title: windowTitle as? String ?? "",
-      configuration: currentSchedule!
+      configuration: self.scheduleManager.getSchedule()!
     )
 
     if CHROME_BROWSERS.contains(frontmost.localizedName!) {

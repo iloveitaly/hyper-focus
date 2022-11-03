@@ -44,6 +44,7 @@ class ApiServer {
         return self.scheduleManager.namedSchedules().map { $0.name }
       }
 
+      // http -vvv POST http://localhost:8080/override name='hyper focus' until=1667514400
       router["/override"] = JSONResponse() { environ -> Any in
         var pauseUtil: Int?
         var scheduleName: String?
