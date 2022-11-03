@@ -3,7 +3,11 @@ import Embassy
 import Foundation
 
 class ApiServer {
-  init() {
+  let scheduleManager: ScheduleManager
+
+  init(scheduleManager: ScheduleManager) {
+    self.scheduleManager = scheduleManager
+
     Task {
       let loop = try! SelectorEventLoop(selector: try! KqueueSelector())
       let server = DefaultHTTPServer(eventLoop: loop, port: 8080) {
@@ -12,12 +16,20 @@ class ApiServer {
               startResponse: ((String, [(String, String)]) -> Void),
               sendBody: ((Data) -> Void)
           ) in
-          // Start HTTP response
+
+          let input = environ["swsgi.input"] as! SWSGIInput
+          input { data in
+              print("Received data: \(data)")
+              // handle the body data here
+          }
+
           startResponse("200 OK", [])
-          let pathInfo = environ["PATH_INFO"]! as! String
-          sendBody(Data("the path you're visiting is \(pathInfo.debugDescription)".utf8))
-          // send EOF
+          sendBody(Data("the path you're visiting is \(environ)".utf8))
           sendBody(Data())
+
+          // 5 minutes from now
+          let fiveMinutesFromNow = Date().addingTimeInterval(60 * 5)
+          self.scheduleManager.pauseBlocking(fiveMinutesFromNow)
       }
 
       // Start HTTP server to listen on the port
