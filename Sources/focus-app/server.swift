@@ -6,6 +6,7 @@ import Telegraph
 class ApiServer {
   let scheduleManager: ScheduleManager
 
+  // TODO not used!
   // http -vvv GET http://localhost:8081/ping
   func old() {
     let server = Server()
@@ -27,39 +28,85 @@ class ApiServer {
   init(scheduleManager: ScheduleManager) {
     self.scheduleManager = scheduleManager
 
-    old()
+    // must run in separate thread or it will block the main event loop
     Task {
       let loop = try! SelectorEventLoop(selector: try! KqueueSelector())
       let router = Router()
       let server = DefaultHTTPServer(eventLoop: loop, port: 8080, app: router.app)
 
-      router["/pause"] = JSONResponse() { environ -> Any in
-        let input = environ["swsgi.input"] as! SWSGIInput
+      // https://github.com/envoy/Ambassador/blob/master/Ambassador/Responses/JSONResponse.swift
 
-        var receivedData: [String: Int];
+      router["/ping"] = JSONResponse() { _ -> Any in
+        return ["status": "ok"]
+      }
+
+      router["/configurations"] = JSONResponse() { _ -> Any in
+        return self.scheduleManager.namedSchedules().map { $0.name }
+      }
+
+      router["/override"] = JSONResponse() { environ -> Any in
+        var pauseUtil: Int?
+        var scheduleName: String?
+
+        let input = environ["swsgi.input"] as! SWSGIInput
         JSONReader.read(input) { json in
-          guard let receivedData = json as? [String: Int] else {
+          guard let receivedData: [String : Any] = json as? [String: Any] else {
             return
           }
 
-          print("Received data: \(json)")
-          // let timestamp = json["until"] as! Int
+          if let until = receivedData["until"] as? Int {
+            pauseUtil = until
+          } else if let until = receivedData["until"] as? String {
+            pauseUtil = Int(until)
+          }
 
-          // 5 minutes from now
-          let fiveMinutesFromNow = Date().addingTimeInterval(60 * 5)
-          self.scheduleManager.pauseBlocking(fiveMinutesFromNow)
+          scheduleName = receivedData["name"] as? String
         }
 
-        // return empty dictionary
-        return [:]
+        if scheduleName == nil || pauseUtil == nil {
+          return ["error": "missing parameters"]
+        }
 
-        // return ["hi"]
+        let end = Date(timeIntervalSince1970: TimeInterval(pauseUtil!))
+
+        self.scheduleManager.scheduleOverride(
+          name: scheduleName!,
+          end: end
+        )
+
+        return ["status": "ok"]
       }
 
-      // Start HTTP server to listen on the port
-      try! server.start()
+      // http -vvv POST http://localhost:8080/pause until=1667510271
+      router["/pause"] = JSONResponse() { environ -> Any in
+        var pauseUtil: Int?
 
-      // Run event loop
+        let input = environ["swsgi.input"] as! SWSGIInput
+        JSONReader.read(input) { json in
+          guard let receivedData: [String : Any] = json as? [String: Any] else {
+            return
+          }
+
+          // handle receivedData["until"] being a string or int
+          if let until = receivedData["until"] as? Int {
+            pauseUtil = until
+          } else if let until = receivedData["until"] as? String {
+            pauseUtil = Int(until)
+          }
+        }
+
+        guard pauseUtil != nil else {
+          return ["status": "error", "message": "missing integer until param"]
+        }
+
+        // convert pauseUtil to date
+        let untilDate = Date(timeIntervalSince1970: TimeInterval(pauseUtil!))
+        self.scheduleManager.pauseBlocking(untilDate)
+
+        return ["status": "ok"]
+      }
+
+      try! server.start()
       loop.runForever()
     }
   }

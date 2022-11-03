@@ -5,6 +5,7 @@ import ScriptingBridge
 public enum focus_app {
   public static func main() {
     start()
+    // dispatchMain() is NOT identical, there are slight differences
     RunLoop.main.run()
   }
 }
@@ -102,7 +103,7 @@ func start() {
   scheduleManager.checkSchedule()
 
   // TODO temp override
-  scheduleManager.scheduleOverride(name: "hyper focus", end: Date().addingTimeInterval(60 * 60))
+  // scheduleManager.scheduleOverride(name: "hyper focus", end: Date().addingTimeInterval(60 * 60))
 
   SleepWatcher(scheduleManager: scheduleManager)
   ApiServer(scheduleManager: scheduleManager)
@@ -173,9 +174,15 @@ class ScheduleManager {
     setSchedule(self.BLANK_SCHEDULE)
   }
 
+  func namedSchedules() -> [Configuration.ScheduleItem] {
+    return configuration.schedule.filter { $0.name != nil }
+  }
+
   func scheduleOverride(name: String, end: Date) {
+    log("schedule override \(name) until \(end)")
+
     // find a schedule with a name that matches the `name` parameter
-    let schedule = configuration.schedule.first { $0.name == name }
+    let schedule = self.namedSchedules().first { $0.name == name }
 
     if let schedule = schedule {
       endOverride = end
