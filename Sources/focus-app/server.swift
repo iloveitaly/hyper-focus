@@ -3,30 +3,34 @@ import Ambassador
 import Foundation
 import Telegraph
 
+var server: Server?
+
 class ApiServer {
   let scheduleManager: ScheduleManager
 
   // TODO not used!
   // http -vvv GET http://localhost:8081/ping
   func old() {
-    let server = Server()
-    server.route(.GET, "/ping") { (.ok, "Server is running") }
-    server.route(.GET, "ping") { (.ok, "Server is running") }
+    server = Server()
+    guard let unwrappedServer = server else {
+      return
+    }
+    unwrappedServer.route(.GET, "/ping") { (.ok, "Server is running") }
+    unwrappedServer.route(.GET, "ping") { (.ok, "Server is running") }
 
-    Task {
-      do {
-        try server.start(port: 8081, interface: "localhost")
-        server.route(.GET, "/ping") { (.ok, "Server is running") }
-        server.route(.GET, "ping") { (.ok, "Server is running") }
-        print("started server")
-      } catch {
-        print("Server start error: \(error)")
-      }
+    do {
+      try unwrappedServer.start(port: 8081, interface: "localhost")
+      unwrappedServer.route(.GET, "/ping") { (.ok, "Server is running") }
+      unwrappedServer.route(.GET, "ping") { (.ok, "Server is running") }
+      print("started server")
+    } catch {
+      print("Server start error: \(error)")
     }
   }
 
   init(scheduleManager: ScheduleManager) {
     self.scheduleManager = scheduleManager
+    old()
 
     // must run in separate thread or it will block the main event loop
     Task {
