@@ -81,6 +81,7 @@ func loadConfigurationFromCommandLine() -> Configuration {
 }
 
 var main: MainThing?
+var sleepWatcher: SleepWatcher?
 
 func start() {
   guard checkAccess() else {
@@ -105,7 +106,7 @@ func start() {
     configuration: configuration
   )
 
-  SleepWatcher(scheduleManager: scheduleManager)
+  sleepWatcher = SleepWatcher(scheduleManager: scheduleManager, configuration: configuration)
   ApiServer(scheduleManager: scheduleManager)
 
   // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
@@ -118,25 +119,6 @@ func start() {
   )
 
   main!.focusedAppChanged()
-}
-
-class SleepWatcher {
-  let scheduleManager: ScheduleManager
-
-  init(scheduleManager: ScheduleManager) {
-    self.scheduleManager = scheduleManager
-
-    NSWorkspace.shared.notificationCenter.addObserver(
-      self,
-      selector: #selector(self.awakeFromSleep),
-      name: NSWorkspace.didWakeNotification,
-      object: nil
-    )
-  }
-
-  @objc func awakeFromSleep() {
-    log("awake from sleep")
-  }
 }
 
 class ScheduleManager {
