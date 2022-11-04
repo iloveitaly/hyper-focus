@@ -1,12 +1,8 @@
 - [ ] extract out logging into separate file
-- [ ] support host blocking and url blocking
-- [ ] add a way to pause, maybe a cli argument or something?
-  - [ ] maybe a web API or applescript api
-  - [ ] https://building42.github.io/Telegraph/
-- [ ] track initial wake
+  - [ ] Or use package for logging
 - [ ] execute wake and initial wake
 - [ ] launch daemon config from sleepwatcher
 - [ ] brew installation
-- [ ] block urls that are a partial match: if the path and query string in the block entry are contained in the current URL, it's a match.
-  - [ ] Would be cool to have a regex match
+- [ ] Would be cool to have a regex match option, not sure how this would fit into the
 - [ ] macos notification when new schedule is enabled
+- [ ] raycast interface
