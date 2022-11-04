@@ -5,6 +5,7 @@ import ScriptingBridge
 public enum focus_app {
   public static func main() {
     start()
+
     // dispatchMain() is NOT identical, there are slight differences
     RunLoop.main.run()
   }
@@ -17,7 +18,7 @@ enum BrowserTab {
   case safari(SafariTab)
 }
 
-// TODO need to rename
+// TODO: need to rename
 struct NetworkMessage {
   let app: String
   let title: String
@@ -85,7 +86,7 @@ var sleepWatcher: SleepWatcher?
 
 func start() {
   guard checkAccess() else {
-    // TODO I don't really know what this dispatchqueue business does
+    // TODO: I don't really know what this dispatchqueue business does
     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
       start()
     }
@@ -93,7 +94,7 @@ func start() {
   }
 
   // TODO: could allow for a ui and storing config outside of the default location
-  // TODO add `www` variant to all hosts
+  // TODO: add `www` variant to all hosts
   let configuration = loadConfigurationFromCommandLine()
 
   let scheduleManager = ScheduleManager(
@@ -164,7 +165,7 @@ class ScheduleManager {
     log("schedule override \(name) until \(end)")
 
     // find a schedule with a name that matches the `name` parameter
-    let schedule = self.namedSchedules().first { $0.name == name }
+    let schedule = namedSchedules().first { $0.name == name }
 
     if let schedule = schedule {
       endOverride = end
@@ -177,7 +178,7 @@ class ScheduleManager {
   func checkSchedule() {
     let now = Date()
 
-    if endOverride != nil && now >= endOverride! {
+    if endOverride != nil, now >= endOverride! {
       log("override date has passed, removing override")
       endOverride = nil
     }
@@ -206,16 +207,16 @@ class ScheduleManager {
   }
 
   func setSchedule(_ schedule: Configuration.ScheduleItem) {
-    // TODO there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
+    // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
     self.schedule = schedule
   }
 
   func getSchedule() -> Configuration.ScheduleItem? {
-    if endPause != nil && Date() < endPause! {
-      return self.BLANK_SCHEDULE
+    if endPause != nil, Date() < endPause! {
+      return BLANK_SCHEDULE
     }
 
-    return self.schedule
+    return schedule
   }
 }
 
@@ -262,7 +263,7 @@ class MainThing {
     var data = NetworkMessage(
       app: frontmost.localizedName!,
       title: windowTitle as? String ?? "",
-      configuration: self.scheduleManager.getSchedule()!
+      configuration: scheduleManager.getSchedule()!
     )
 
     if CHROME_BROWSERS.contains(frontmost.localizedName!) {
@@ -384,6 +385,7 @@ class MainThing {
   }
 }
 
+// TODO is enum really the right thing to do here? Unsure :)
 enum ActionHandler {
   static func handleAction(_ data: NetworkMessage) {
     log("handling action: \(data)")
@@ -420,24 +422,66 @@ enum ActionHandler {
     }
 
     if data.configuration.block_hosts.contains(host) {
-      error("blocked url, redirecting browser to block page")
-
-      // TODO: allow redirect to be configured
-      let redirectUrl: String? = "about:blank"
-
-      // TODO: I don't know how to more elegantly unwrap the enum here...
-      switch data.activeTab {
-      case let .chrome(tab):
-        tab.setURL!(redirectUrl)
-      case let .safari(tab):
-        tab.setURL!(redirectUrl)
-      // TODO: firefox?
-      case .none:
-        break
-      }
+      error("blocked host, redirecting browser to block page")
+      blockTab(data.activeTab)
+      return true
     }
 
-    return true
+    log("checking urls")
+
+    if data.configuration.block_urls.count > 0 && data.configuration.block_urls.contains(where: { isSubsetOfUrl(supersetUrl: $0, subsetUrl: url) }) {
+      error("blocked url, redirecting browser to block page")
+      blockTab(data.activeTab)
+      return true
+    }
+
+    return false
+  }
+}
+
+func isSubsetOfUrl(supersetUrl: String, subsetUrl: String) -> Bool {
+  let supersetUrl = URL(string: supersetUrl)!
+  let subsetUrl = URL(string: subsetUrl)!
+
+  // TODO too big, should be a separate method!
+  var queryIsSubset = true
+  if let supersetQuery = supersetUrl.query, let subsetQuery = subsetUrl.query {
+    let supersetQueryItems = URLComponents(string: supersetQuery)!.queryItems
+    let subsetQueryItems = URLComponents(string: subsetQuery)!.queryItems
+
+    // check for nils
+    if supersetQueryItems == nil || subsetQueryItems == nil {
+      queryIsSubset = false
+    } else {
+      log("supersetQueryItems: \(supersetQueryItems!) \(subsetQueryItems!)")
+      subsetQueryItems!.forEach { subsetQueryItem in
+        if !supersetQueryItems!.contains(subsetQueryItem) {
+          queryIsSubset = false
+        }
+      }
+    }
+  } else {
+    queryIsSubset = false
+  }
+
+  return queryIsSubset &&
+    supersetUrl.host == subsetUrl.host &&
+    supersetUrl.path == subsetUrl.path
+}
+
+func blockTab(_ activeTab: BrowserTab?) {
+  // TODO: allow redirect to be configured
+  let redirectUrl: String? = "about:blank"
+
+  // TODO: I don't know how to more elegantly unwrap the enum here...
+  switch activeTab {
+  case let .chrome(tab):
+    tab.setURL!(redirectUrl)
+  case let .safari(tab):
+    tab.setURL!(redirectUrl)
+  // TODO: firefox?
+  case .none:
+    break
   }
 }
 
