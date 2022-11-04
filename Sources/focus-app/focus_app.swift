@@ -18,45 +18,12 @@ enum BrowserTab {
   case safari(SafariTab)
 }
 
-// TODO: need to rename
-struct NetworkMessage {
+struct SwitchingActivity {
   let app: String
   let title: String
   let configuration: Configuration.ScheduleItem
   var activeTab: BrowserTab?
   var url: String?
-}
-
-// there's no builtin logging library on macos which has levels & hits stdout, so we build our own simple one
-// there a complex open source one, but it makes it harder to compile this simple one-file swift application
-let dateFormatter = DateFormatter()
-
-func logTimestamp() -> String {
-  let now = Date()
-  dateFormatter.timeZone = TimeZone.current
-  dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-  return dateFormatter.string(from: now)
-}
-
-// generate log prefix based on level
-func logPrefix(_ level: String) -> String {
-  return "\(logTimestamp()) [aw-watcher-window-macos] [\(level)]"
-}
-
-let logLevel = ProcessInfo.processInfo.environment["LOG_LEVEL"]?.uppercased() ?? "DEBUG"
-
-func debug(_ msg: String) {
-  if logLevel == "DEBUG" {
-    print("\(logPrefix("DEBUG")) \(msg)")
-  }
-}
-
-func log(_ msg: String) {
-  print("\(logPrefix("INFO")) \(msg)")
-}
-
-func error(_ msg: String) {
-  print("\(logPrefix("ERROR")) \(msg)")
 }
 
 struct Configuration: Codable {
@@ -260,7 +227,7 @@ class MainThing {
     var windowTitle: AnyObject?
     AXUIElementCopyAttributeValue(axElement, kAXTitleAttribute as CFString, &windowTitle)
 
-    var data = NetworkMessage(
+    var data = SwitchingActivity(
       app: frontmost.localizedName!,
       title: windowTitle as? String ?? "",
       configuration: scheduleManager.getSchedule()!
@@ -387,7 +354,7 @@ class MainThing {
 
 // TODO is enum really the right thing to do here? Unsure :)
 enum ActionHandler {
-  static func handleAction(_ data: NetworkMessage) {
+  static func handleAction(_ data: SwitchingActivity) {
     log("handling action: \(data)")
 
     if appAction(data) { return }
@@ -400,7 +367,7 @@ enum ActionHandler {
     return url?.host
   }
 
-  static func appAction(_ data: NetworkMessage) -> Bool {
+  static func appAction(_ data: SwitchingActivity) -> Bool {
     if data.configuration.block_apps.contains(data.app) {
       log("app is in block_apps, hiding application to prevent usage")
       NSWorkspace.shared.frontmostApplication!.hide()
@@ -410,7 +377,7 @@ enum ActionHandler {
     return false
   }
 
-  static func browserAction(_ data: NetworkMessage) -> Bool {
+  static func browserAction(_ data: SwitchingActivity) -> Bool {
     guard let url = data.url else {
       log("url is empty, not doing anything")
       return false
