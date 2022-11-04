@@ -19,6 +19,7 @@ enum ActionHandler {
   static func appAction(_ data: SwitchingActivity) -> Bool {
     if data.configuration.block_apps.contains(data.app) {
       log("app is in block_apps, hiding application to prevent usage")
+      // TODO sometimes this hide method does not work
       NSWorkspace.shared.frontmostApplication!.hide()
       return true
     }
@@ -45,7 +46,8 @@ enum ActionHandler {
 
     log("checking urls")
 
-    if data.configuration.block_urls.count > 0, data.configuration.block_urls.contains(where: { isSubsetOfUrl(supersetUrl: $0, subsetUrl: url) }) {
+    // the urls in the config are expected to have less params, so they are considered the subset
+    if data.configuration.block_urls.count > 0, data.configuration.block_urls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) {
       error("blocked url, redirecting browser to block page")
       blockTab(data.activeTab)
       return true
@@ -54,25 +56,16 @@ enum ActionHandler {
     return false
   }
 
-  static func isSubsetOfUrl(supersetUrl: String, subsetUrl: String) -> Bool {
-    let supersetUrl = URL(string: supersetUrl)!
-    let subsetUrl = URL(string: subsetUrl)!
+  static func isSubsetOfUrl(supersetUrlString: String, subsetUrlString: String) -> Bool {
+    let supersetUrl = URLComponents(string: supersetUrlString)!
+    let subsetUrl = URLComponents(string: subsetUrlString)!
 
     // TODO: too big, should be a separate method!
     var queryIsSubset = true
-    if let supersetQuery = supersetUrl.query, let subsetQuery = subsetUrl.query {
-      let supersetQueryItems = URLComponents(string: supersetQuery)!.queryItems
-      let subsetQueryItems = URLComponents(string: subsetQuery)!.queryItems
-
-      // check for nils
-      if supersetQueryItems == nil || subsetQueryItems == nil {
-        queryIsSubset = false
-      } else {
-        log("supersetQueryItems: \(supersetQueryItems!) \(subsetQueryItems!)")
-        subsetQueryItems!.forEach { subsetQueryItem in
-          if !supersetQueryItems!.contains(subsetQueryItem) {
-            queryIsSubset = false
-          }
+    if let supersetQueryItems = supersetUrl.queryItems, let subsetQueryItems = subsetUrl.queryItems {
+      subsetQueryItems.forEach { subsetQueryItem in
+        if !supersetQueryItems.contains(subsetQueryItem) {
+          queryIsSubset = false
         }
       }
     } else {
