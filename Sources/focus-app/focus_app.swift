@@ -24,8 +24,8 @@ struct Configuration: Codable {
     var block_apps: [String]
   }
 
-  var initial_wake: String
-  var wake: String
+  var initial_wake: String?
+  var wake: String?
   var schedule: [ScheduleItem]
 }
 
