@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Generated schema for Root",
+  "title": "Schema for Hyper Focus configuration",
   "type": "object",
   "properties": {
     "initial_wake": {
@@ -42,20 +42,11 @@
             }
           }
         },
-        "required": [
-          "start",
-          "end",
-          "name",
-          "block_hosts",
-          "block_urls",
-          "block_apps"
-        ]
+        "required": []
       }
     }
   },
   "required": [
-    "initial_wake",
-    "wake",
     "schedule"
   ]
 }
