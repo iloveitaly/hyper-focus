@@ -5,4 +5,7 @@
 - [ ] brew installation
 - [ ] Would be cool to have a regex match option, not sure how this would fit into the
 - [ ] macos notification when new schedule is enabled
-- [ ] raycast interface
+- [ ] support json config with comments
+- [ ] JSON schema
+- [ ] add `www.` variant to all `block_hosts` entries
+- [ ] add option to kill certain apps if they are open
