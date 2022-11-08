@@ -1,6 +1,8 @@
 import AppKit
 import ScriptingBridge
 
+// https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
+
 // MARK: SafariSaveOptions
 @objc public enum SafariSaveOptions : AEKeyword {
     case yes = 0x79657320 /* 'yes ' */

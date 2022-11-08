@@ -1,18 +1,6 @@
 import Cocoa
 import ScriptingBridge
 
-@main
-public enum focus_app {
-  public static func main() {
-    start()
-
-    // dispatchMain() is NOT identical, there are slight differences
-    RunLoop.main.run()
-  }
-}
-
-// https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
-
 enum BrowserTab {
   case chrome(GoogleChromeTab)
   case safari(SafariTab)
@@ -41,55 +29,58 @@ struct Configuration: Codable {
   var schedule: [ScheduleItem]
 }
 
-func loadConfigurationFromCommandLine() -> Configuration {
-  let configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
-  let configData = try! Data(contentsOf: configPath)
-  let config = try! JSONDecoder().decode(Configuration.self, from: configData)
-  return config
-}
-
-var main: MainThing?
+var systemObserver: SystemObserver?
 var sleepWatcher: SleepWatcher?
+var apiServer: ApiServer?
 
-func start() {
-  guard checkAccess() else {
-    // TODO: I don't really know what this dispatchqueue business does
-    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-      start()
-    }
-    return
+@main
+public enum focus_app {
+  public static func main() {
+    start()
+
+    // dispatchMain() is NOT identical, there are slight differences
+    RunLoop.main.run()
   }
 
-  // TODO: could allow for a ui and storing config outside of the default location
-  // TODO: add `www` variant to all hosts
-  let configuration = loadConfigurationFromCommandLine()
+  static func loadConfigurationFromCommandLine() -> Configuration {
+    let configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
+    let configData = try! Data(contentsOf: configPath)
+    let config = try! JSONDecoder().decode(Configuration.self, from: configData)
+    return config
+  }
 
-  let scheduleManager = ScheduleManager(
-    configuration: configuration
-  )
-  scheduleManager.checkSchedule()
+  static func start() {
+    guard checkAccess() else {
+      // TODO: I don't really know what this dispatchqueue business does
+      DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+        start()
+      }
+      return
+    }
 
-  main = MainThing(
-    scheduleManager: scheduleManager,
-    configuration: configuration
-  )
+    // TODO: could allow for a ui and storing config outside of the default location
+    // TODO: add `www` variant to all hosts
+    let configuration = loadConfigurationFromCommandLine()
 
-  sleepWatcher = SleepWatcher(scheduleManager: scheduleManager, configuration: configuration)
-  ApiServer(scheduleManager: scheduleManager)
+    let scheduleManager = ScheduleManager(
+      configuration: configuration
+    )
 
-  // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
-  // listen for changes in focused application
-  NSWorkspace.shared.notificationCenter.addObserver(
-    main!,
-    selector: #selector(main!.focusedAppChanged),
-    name: NSWorkspace.didActivateApplicationNotification,
-    object: nil
-  )
+    systemObserver = SystemObserver(
+      scheduleManager: scheduleManager,
+      configuration: configuration
+    )
 
-  main!.focusedAppChanged()
+    sleepWatcher = SleepWatcher(
+      scheduleManager: scheduleManager,
+      configuration: configuration
+    )
+
+    apiServer = ApiServer(scheduleManager: scheduleManager)
+  }
 }
 
-class MainThing {
+class SystemObserver {
   var observer: AXObserver?
   var oldWindow: AXUIElement?
 
@@ -107,6 +98,17 @@ class MainThing {
   init(scheduleManager: ScheduleManager, configuration: Configuration) {
     self.scheduleManager = scheduleManager
     self.configuration = configuration
+
+      // https://developer.apple.com/documentation/appkit/nsworkspace/1535049-didactivateapplicationnotificati
+    // listen for changes in focused application
+    NSWorkspace.shared.notificationCenter.addObserver(
+      self,
+      selector: #selector(self.focusedAppChanged),
+      name: NSWorkspace.didActivateApplicationNotification,
+      object: nil
+    )
+
+    self.focusedAppChanged()
   }
 
   func hasActiveSchedule() -> Bool {
@@ -213,7 +215,7 @@ class MainThing {
           return
         }
 
-        let application = Unmanaged<MainThing>.fromOpaque(userData).takeUnretainedValue()
+        let application = Unmanaged<SystemObserver>.fromOpaque(userData).takeUnretainedValue()
         if notification == kAXFocusedWindowChangedNotification as CFString {
           application.focusedWindowChanged(axObserver, window: axElement)
         } else {

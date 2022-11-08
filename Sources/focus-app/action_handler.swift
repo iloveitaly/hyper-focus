@@ -2,6 +2,8 @@ import Foundation
 import Cocoa
 
 // TODO: is enum really the right thing to do here? Unsure :)
+//       best way I could find to group together related functions
+
 enum ActionHandler {
   static func handleAction(_ data: SwitchingActivity) {
     log("handling action: \(data)")

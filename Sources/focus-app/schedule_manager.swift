@@ -24,6 +24,8 @@ class ScheduleManager {
       userInfo: nil,
       repeats: true
     )
+
+    self.checkSchedule()
   }
 
   @objc func fireTimer(timer _: Timer) {
