@@ -1,5 +1,7 @@
 # Hyper Focus
 
+WIP: still a todo list to work through before this is officially ready, but it's working locally for me.
+
 ## Features
 
 * Fast, CLI-oriented tool

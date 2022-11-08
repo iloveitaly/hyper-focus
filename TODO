@@ -9,3 +9,7 @@
 - [ ] JSON schema
 - [ ] add `www.` variant to all `block_hosts` entries
 - [ ] add option to kill certain apps if they are open
+- [ ] custom redirect page
+- [ ] I wonder if there is a tool out there to generate a ui based off a json schema?
+- [ ] YouTube video about how it works
+- [ ] make a logo with AI? https://www.shopify.com/tools/logo-maker/onboarding/brand-values
