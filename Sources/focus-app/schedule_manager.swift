@@ -7,6 +7,9 @@ class ScheduleManager {
   var endOverride: Date?
   var endPause: Date?
 
+  // here for API, not used in the implementation
+  var overrideSchedule: Configuration.ScheduleItem?
+
   let BLANK_SCHEDULE = Configuration.ScheduleItem(
     block_hosts: [],
     block_urls: [],
@@ -49,6 +52,7 @@ class ScheduleManager {
 
     if let schedule = schedule {
       endOverride = end
+      overrideSchedule = schedule
       setSchedule(schedule)
     } else {
       error("no schedule with name \(name)")
@@ -83,10 +87,12 @@ class ScheduleManager {
     if let schedule = schedules.first, schedule != self.schedule {
       log("changing schedule to \(schedule)")
       setSchedule(schedule)
+    } else {
+      self.setSchedule(nil)
     }
   }
 
-  func setSchedule(_ schedule: Configuration.ScheduleItem) {
+  func setSchedule(_ schedule: Configuration.ScheduleItem?) {
     // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
     self.schedule = schedule
   }
