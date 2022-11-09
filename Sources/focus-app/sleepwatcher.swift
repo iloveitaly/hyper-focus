@@ -47,12 +47,14 @@ class SleepWatcher {
 
     log("running script \(expandedScript)")
 
+    // TODO need some sort of timeout and not wait for input
+
     let task = Process()
     task.standardInput = FileHandle.nullDevice
     task.launchPath = expandedScript
-    task.launch()
-
+    task.run()
     task.waitUntilExit()
+
     let status = task.terminationStatus
     if status != 0 {
       error("script \(expandedScript) exited with error code \(status)")
