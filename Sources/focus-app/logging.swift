@@ -3,6 +3,8 @@ import Foundation
 // there's no builtin logging library on macos which has levels & hits stdout, so we build our own simple one
 // there a complex open source one, but it makes it harder to compile this simple one-file swift application
 let dateFormatter = DateFormatter()
+let programName = "focus-app"
+let logLevel = ProcessInfo.processInfo.environment["LOG_LEVEL"]?.uppercased() ?? "DEBUG"
 
 func logTimestamp() -> String {
   let now = Date()
@@ -13,10 +15,8 @@ func logTimestamp() -> String {
 
 // generate log prefix based on level
 func logPrefix(_ level: String) -> String {
-  return "\(logTimestamp()) [aw-watcher-window-macos] [\(level)]"
+  return "\(logTimestamp()) [\(programName)] [\(level)]"
 }
-
-let logLevel = ProcessInfo.processInfo.environment["LOG_LEVEL"]?.uppercased() ?? "DEBUG"
 
 public func debug(_ msg: String) {
   if logLevel == "DEBUG" {
