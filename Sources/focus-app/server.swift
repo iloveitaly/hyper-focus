@@ -49,7 +49,7 @@ class ApiServer {
       }
 
       router["/status"] = JSONResponse { _ -> [String: Dictionary] in
-        let currentSchedule = self.scheduleManager.schedule
+        let currentSchedule = self.scheduleManager.plannedSchedule
         var scheduledUntil: Int?
 
         if currentSchedule != nil {
@@ -64,17 +64,17 @@ class ApiServer {
         }
 
         return [
+          "schedule": [
+            "name": self.scheduleManager.plannedSchedule?.name,
+            "until": scheduledUntil
+          ],
           "override": [
             "until": self.scheduleManager.endOverride?.timeIntervalSince1970,
             "name": self.scheduleManager.overrideSchedule?.name,
           ],
           "pause": [
             "until": self.scheduleManager.endPause?.timeIntervalSince1970,
-          ],
-          "schedule": [
-            "name": self.scheduleManager.schedule?.name,
-            "until": scheduledUntil
-          ],
+          ]
         ]
       }
 

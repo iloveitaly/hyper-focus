@@ -7,8 +7,9 @@ class ScheduleManager {
   var endOverride: Date?
   var endPause: Date?
 
-  // here for API, not used in the implementation
+  // only used for API, not used in the implementation
   var overrideSchedule: Configuration.ScheduleItem?
+  var plannedSchedule: Configuration.ScheduleItem?
 
   let BLANK_SCHEDULE = Configuration.ScheduleItem(
     block_hosts: [],
@@ -65,6 +66,7 @@ class ScheduleManager {
     if endOverride != nil, now >= endOverride! {
       log("override date has passed, removing override")
       endOverride = nil
+      overrideSchedule = nil
     }
 
     if endOverride != nil {
@@ -84,22 +86,29 @@ class ScheduleManager {
     }
 
     // is the selected schedule different than the current one?
-    if let schedule = schedules.first, schedule != self.schedule {
-      log("changing schedule to \(schedule)")
+    if let schedule = schedules.first {
+      plannedSchedule = schedule
       setSchedule(schedule)
     } else {
+      plannedSchedule = nil
       self.setSchedule(nil)
     }
   }
 
   func setSchedule(_ schedule: Configuration.ScheduleItem?) {
-    // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
-    self.schedule = schedule
+    if schedule != self.schedule {
+      log("changing schedule to \(schedule ?? nil)")
+      // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
+      self.schedule = schedule
+    }
   }
 
   func getSchedule() -> Configuration.ScheduleItem? {
+    // TODO weird to have this check vs in the check poller, but we need a conditional to return BLANK_SCHEDULE
     if endPause != nil, Date() < endPause! {
       return BLANK_SCHEDULE
+    } else {
+      endPause = nil
     }
 
     return schedule
