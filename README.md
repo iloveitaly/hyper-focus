@@ -35,6 +35,13 @@ Having a first wake script allows you to tie into something like [clean browsers
 * Block hosts
 * Block specific URLs, ignoring anchors, and allowing a partial/subset match on query strings.
 
+## Non-Features
+
+* Executing scripts for other system states, like other sleep watcher tools. For instance, screen dim/wake or lid close/open.
+* Kill/quit applications if they are open. This can be done via a wake script or schedule initialization script (`osascript -e 'quit app "App Name"'`).
+* Notification when a new schedule is enabled. You could do this via a schedule initialization script.
+* Native macOS application.
+
 ## HTTP API
 
 Instead of UI, I've opted to a simple HTTP API that can be used to power a [Raycast](https://raycast.com/)-based UI.
