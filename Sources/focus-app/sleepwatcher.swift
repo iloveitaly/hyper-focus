@@ -28,10 +28,7 @@ class SleepWatcher {
       log("first wake of the day")
 
       if let initialWake = configuration.initial_wake {
-        log("executing first wake script \(initialWake)")
-        let task = Process()
-        task.launchPath = NSString(string: initialWake).expandingTildeInPath
-        task.launch()
+        executeTask(initialWake)
       }
     }
 
@@ -42,10 +39,23 @@ class SleepWatcher {
       return
     }
 
-    log("running wake script \(wakeScript)")
+    executeTask(wakeScript)
+  }
+
+  func executeTask(_ taskPath: String) {
+    let expandedScript = NSString(string: taskPath).expandingTildeInPath
+
+    log("running script \(expandedScript)")
 
     let task = Process()
-    task.launchPath = NSString(string: wakeScript).expandingTildeInPath
+    task.standardInput = FileHandle.nullDevice
+    task.launchPath = expandedScript
     task.launch()
+
+    task.waitUntilExit()
+    let status = task.terminationStatus
+    if status != 0 {
+      error("script \(expandedScript) exited with error code \(status)")
+    }
   }
 }
