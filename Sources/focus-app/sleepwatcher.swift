@@ -52,7 +52,13 @@ class SleepWatcher {
     let task = Process()
     task.standardInput = FileHandle.nullDevice
     task.launchPath = expandedScript
-    task.run()
+
+    do {
+      try task.run()
+    } catch {
+      log("failed to run script \(expandedScript) \(error)")
+    }
+
     task.waitUntilExit()
 
     let status = task.terminationStatus

@@ -36,11 +36,15 @@ enum ActionHandler {
     }
 
     guard let host = extractHost(url) else {
-      error("no host in url")
+      error("no host, not a valid url, skipping ")
       return false
     }
 
-    if data.configuration.block_hosts.contains(host) {
+    // add 'www.' to all block_hosts entries
+    let blockHosts = data.configuration.block_hosts
+    let blockHostsWithWWW = blockHosts.map { "www.\($0)" }
+
+    if blockHosts.contains(host) || blockHostsWithWWW.contains(host) {
       error("blocked host, redirecting browser to block page")
       blockTab(data.activeTab)
       return true
