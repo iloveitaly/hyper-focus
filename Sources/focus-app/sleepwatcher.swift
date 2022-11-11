@@ -45,9 +45,15 @@ class SleepWatcher {
   func executeTask(_ taskPath: String) {
     let expandedScript = NSString(string: taskPath).expandingTildeInPath
 
+    if !FileManager.default.fileExists(atPath: expandedScript) {
+      error("script does not exist: \(expandedScript)")
+      return
+    }
+
     log("running script \(expandedScript)")
 
     // TODO need some sort of timeout and not wait for input
+    //      https://developer.apple.com/documentation/dispatch/dispatchgroup/1780590-wait
 
     let task = Process()
     task.standardInput = FileHandle.nullDevice
@@ -57,13 +63,18 @@ class SleepWatcher {
       try task.run()
     } catch {
       log("failed to run script \(expandedScript) \(error)")
+      return
     }
 
     task.waitUntilExit()
 
     let status = task.terminationStatus
+
     if status != 0 {
       error("script \(expandedScript) exited with error code \(status)")
+      return
     }
+
+    log("script executed successfully")
   }
 }
