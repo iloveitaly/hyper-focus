@@ -2,10 +2,11 @@ import XCTest
 @testable import focus_app
 
 final class focus_appTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-//        XCTAssertEqual(focus_app().text, "Hello, World!")
+    // this should actually be false, but the cocoa library seems to fail on `[]` in query strings
+    func testURLEquality() throws {
+        XCTAssertEqual(false, ActionHandler.isSubsetOfUrl(
+            supersetUrlString: "http://monica.hole/people?tags[]=vc&othr=var",
+            subsetUrlString: "http://monica.hole/people?tags[]=vc"
+        ))
     }
 }
