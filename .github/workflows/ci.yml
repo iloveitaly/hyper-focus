@@ -11,3 +11,10 @@ jobs:
         run: swift build
       - name: Run tests
         run: swift test
+      - name: Build Production
+        run: swift build -c release
+      # - name: Upload Production Build
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: production-build
+      #     path: .build/x86_64-apple-macosx/release/focus-app
