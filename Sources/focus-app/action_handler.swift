@@ -63,8 +63,13 @@ enum ActionHandler {
   }
 
   static func isSubsetOfUrl(supersetUrlString: String, subsetUrlString: String) -> Bool {
-    let supersetUrl = URLComponents(string: supersetUrlString)!
-    let subsetUrl = URLComponents(string: subsetUrlString)!
+    let optionalSupersetUrl = URLComponents(string: supersetUrlString)
+    let optionalSubsetUrl = URLComponents(string: subsetUrlString)
+
+    guard let supersetUrl = optionalSupersetUrl, let subsetUrl = optionalSubsetUrl else {
+      error("invalid url, skipping")
+      return false
+    }
 
     // TODO: too big, should be a separate method!
     var queryIsSubset = true
