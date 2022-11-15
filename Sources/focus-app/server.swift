@@ -13,26 +13,6 @@ class ApiServer {
   let scheduleManager: ScheduleManager
   let serverPort = 9029
 
-  // TODO: not used! Telegraph is a better server, but I did not realize how to get it working until later
-  // http -vvv GET http://localhost:8081/ping
-  func telegraphServer() {
-    server = Server()
-    guard let unwrappedServer = server else {
-      return
-    }
-    unwrappedServer.route(.GET, "/ping") { (.ok, "Server is running") }
-    unwrappedServer.route(.GET, "ping") { (.ok, "Server is running") }
-
-    do {
-      try unwrappedServer.start(port: 8081, interface: "localhost")
-      unwrappedServer.route(.GET, "/ping") { (.ok, "Server is running") }
-      unwrappedServer.route(.GET, "ping") { (.ok, "Server is running") }
-      print("started server")
-    } catch {
-      print("Server start error: \(error)")
-    }
-  }
-
   init(scheduleManager: ScheduleManager) {
     self.scheduleManager = scheduleManager
 
