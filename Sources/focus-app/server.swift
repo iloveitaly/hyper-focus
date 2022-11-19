@@ -1,9 +1,6 @@
 import Ambassador
 import Embassy
 import Foundation
-import Telegraph
-
-var server: Server?
 
 // because I don't want to learn how to receive applescript events, and because I know
 // web technologies well, I decided to expose a http interface to the application instead
