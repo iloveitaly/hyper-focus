@@ -58,8 +58,8 @@ public enum focus_app {
       return
     }
 
+    // create configuration manager
     // TODO: could allow for a ui and storing config outside of the default location
-    // TODO: add `www` variant to all hosts
     let configuration = loadConfigurationFromCommandLine()
 
     let scheduleManager = ScheduleManager(
@@ -120,13 +120,21 @@ class SystemObserver {
     axElement: AXUIElement,
     notification _: CFString
   ) {
+
     guard hasActiveSchedule() else {
       debug("no active schedule, not processing events")
       return
     }
 
-    let frontmost = NSWorkspace.shared.frontmostApplication!
-    let bundleIdentifier = frontmost.bundleIdentifier!
+    guard let frontmost = NSWorkspace.shared.frontmostApplication else {
+      debug("no frontmost application")
+      return
+    }
+
+    guard let bundleIdentifier = frontmost.bundleIdentifier else {
+      debug("no bundle identifier")
+      return
+    }
 
     var windowTitle: AnyObject?
     AXUIElementCopyAttributeValue(axElement, kAXTitleAttribute as CFString, &windowTitle)
