@@ -78,7 +78,10 @@ class ScheduleManager {
     let hour = calendar.component(.hour, from: now)
 
     // select all schedules where the hour is greater than the start time
-    let schedules = configuration.schedule.filter { $0.start != nil && $0.end != nil && hour >= $0.start! && hour <= $0.end! }
+    let schedules = configuration.schedule.filter {
+      $0.start != nil && $0.end != nil &&
+        hour >= $0.start! && hour <= $0.end!
+    }
 
     if schedules.count > 1 {
       error("More than one schedule is active, this is not supported")

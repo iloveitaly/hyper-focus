@@ -26,13 +26,16 @@ class ApiServer {
       }
 
       router["/status"] = JSONResponse { _ -> [String: Dictionary] in
-        let currentSchedule = self.scheduleManager.plannedSchedule
+        let plannedSchedule = self.scheduleManager.plannedSchedule
         var scheduledUntil: Int?
 
-        if currentSchedule != nil {
+        if plannedSchedule != nil {
+          // special case last hour, otherwise date will be empty
+          let isLastHour = plannedSchedule!.end! == 24
+
           let nowWithStartAndEnd = Calendar.current.date(
-            bySettingHour: currentSchedule!.start!,
-            minute: currentSchedule!.end!,
+            bySettingHour: isLastHour ? 23 : plannedSchedule!.end!,
+            minute: isLastHour ? 59 : 0,
             second: 0,
             of: Date()
           )!
@@ -53,6 +56,12 @@ class ApiServer {
             "until": self.scheduleManager.endPause?.timeIntervalSince1970,
           ]
         ]
+      }
+
+      router["/reload"] = JSONResponse { _ -> [String: String] in
+        // TODO hook into configuration manager
+        // self.scheduleManager.reloadConfiguration()
+        return ["status": "ok"]
       }
 
       router["/configurations"] = JSONResponse { _ -> Any in
