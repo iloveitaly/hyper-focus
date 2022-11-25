@@ -25,11 +25,14 @@ jobs:
         run: swift test -v
 
       - name: Build Release Binary
-        run: swift build -v -c release
+        run: swift build -v -c release --arch arm64 --arch x86_64
+
+      - name: Zip Release Binary
+        run: zip -r focus-app.zip .build/release/focus-app
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: .build/release/focus-app
+          files: focus-app.zip
           draft: true
 
