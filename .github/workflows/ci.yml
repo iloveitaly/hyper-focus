@@ -28,7 +28,7 @@ jobs:
         run: swift build -v -c release --arch arm64 --arch x86_64
 
       - name: Zip Release Binary
-        run: zip -r focus-app.zip .build/release/focus-app
+        run: zip -r focus-app.zip .build/apple/Products/Release/focus-app
 
       - name: Release
         uses: softprops/action-gh-release@v1
