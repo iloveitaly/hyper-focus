@@ -1,20 +1,35 @@
-name: Swift
+name: Build & Release
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+
+# on:
+#   push:
+#     # Sequence of patterns matched against refs/tags
+#     tags:
+#       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+
       - name: Build
-        run: swift build
-      - name: Run tests
-        run: swift test
-      - name: Build Production
-        run: swift build -c release
-      # - name: Upload Production Build
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: production-build
-      #     path: .build/x86_64-apple-macosx/release/focus-app
+        run: swift build -v
+
+      - name: Test
+        run: swift test -v
+
+      - name: Build Release Binary
+        run: swift build -v -c release
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .build/release/focus-app
+          draft: true
+
