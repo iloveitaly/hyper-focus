@@ -1,6 +1,10 @@
 # Hyper Focus
 
-WIP: still a todo list to work through before this is officially ready, but it's working locally for me.
+Hyper Focus is a simple command line tool that watches for changes in the active window and prevents you from doing distracting things.
+
+It allows you define what "distracting things" are for you using a schedule. For example, you might want to prevent yourself from using social media between 9am and 5pm. Or making certain google searches. Or using specific macOS applications.
+
+In other words, if you are obsessive about personal productivity you can predefine what you want a productive day to look like and then use Hyper Focus to enforce it.
 
 ## Features
 
