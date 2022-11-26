@@ -1,5 +1,5 @@
 import XCTest
-@testable import focus_app
+@testable import hyper_focus
 
 final class focus_appTests: XCTestCase {
     // this should actually be false, but the cocoa library seems to fail on `[]` in query strings
