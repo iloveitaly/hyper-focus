@@ -21,11 +21,11 @@ jobs:
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
 
-      - name: Build
-        run: swift build -v
-
       - name: Test
         run: swift test -v
+
+      - name: Build
+        run: swift build -v
 
       - name: Build Release Binary
         run: swift build -v -c release --arch arm64 --arch x86_64
