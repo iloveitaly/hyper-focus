@@ -67,7 +67,7 @@ enum ActionHandler {
     let optionalSubsetUrl = URLComponents(string: subsetUrlString)
 
     guard let supersetUrl = optionalSupersetUrl, let subsetUrl = optionalSubsetUrl else {
-      error("invalid url, skipping")
+      error("invalid url, skipping \(optionalSupersetUrl) \(optionalSubsetUrl)")
       return false
     }
 
