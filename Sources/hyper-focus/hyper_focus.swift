@@ -205,7 +205,11 @@ class SystemObserver {
       )
     }
 
-    let frontmost = NSWorkspace.shared.frontmostApplication!
+    guard let frontmost = NSWorkspace.shared.frontmostApplication else {
+      debug("no bundle identifier")
+      return
+    }
+
     let pid = frontmost.processIdentifier
     let focusedApp = AXUIElementCreateApplication(pid)
 
