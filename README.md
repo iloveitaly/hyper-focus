@@ -4,7 +4,12 @@ Hyper Focus is a simple command line tool that watches for changes in the active
 
 It allows you define what "distracting things" are for you using a schedule. For example, you might want to prevent yourself from using social media between 9am and 5pm. Or making certain google searches. Or using specific macOS applications.
 
-In other words, if you are obsessive about personal productivity you can predefine what you want a productive day to look like and then use Hyper Focus to enforce it.
+In other words, if you are obsessive about personal productivity you can define what you want a productive day to look like and then use Hyper Focus to enforce it.
+
+## Why do this?
+
+- https://marco.org/2015/10/30/automatic-social-discipline
+- http://mikebian.co/tag/digital-minimalism/
 
 ## Features
 
