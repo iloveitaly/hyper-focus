@@ -11,6 +11,8 @@ on:
 #     tags:
 #       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
+# TODO need ventura macos version https://github.com/actions/runner-images/issues/6426
+# https://github.com/actions/runner-images/issues/6642
 env:
   xcodeVersion: 14.1
 
@@ -28,7 +30,7 @@ jobs:
         run: swift build -v
 
       - name: Test
-        run: swift test -v
+        run: swift test -vv
 
       - name: Build Release Binary
         run: swift build -v -c release --arch arm64 --arch x86_64
