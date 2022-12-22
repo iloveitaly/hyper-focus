@@ -14,7 +14,7 @@ on:
 # TODO need ventura macos version https://github.com/actions/runner-images/issues/6426
 # https://github.com/actions/runner-images/issues/6642
 env:
-  xcodeVersion: 14.1
+  xcodeVersion: 14.2
 
 jobs:
   build:
