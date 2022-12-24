@@ -33,7 +33,7 @@ jobs:
 
       - name: Test
         # run: swift test -vv
-        run: swift test -vv -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx15.00"
+        run: swift test -vv -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx10.13"
 
       - name: Build Release Binary
         run: swift build -v -c release --arch arm64 --arch x86_64
