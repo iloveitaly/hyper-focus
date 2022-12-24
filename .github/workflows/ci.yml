@@ -26,6 +26,9 @@ jobs:
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
 
+      - name: setup Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_${{ env.xcodeVersion }}.app/Contents/Developer
+
       - name: Build
         run: swift build -v
 
