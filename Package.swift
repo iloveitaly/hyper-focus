@@ -19,6 +19,6 @@ let package = Package(
             dependencies: ["Ambassador"]),
         .testTarget(
             name: "hyper-focusTests",
-            dependencies: ["hyper-focus"]),
+            dependencies: ["hyper-focus", "Ambassador"]),
     ]
 )
