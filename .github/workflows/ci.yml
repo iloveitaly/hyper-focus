@@ -18,6 +18,10 @@ jobs:
 
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
+        with:
+          # without check-mode, only the diff is checked, but there is no delta
+          # when running within the context of a tag push
+          check-mode: all
 
       - name: setup Xcode version
         run: sudo xcode-select -s /Applications/Xcode_14.2.app
