@@ -6,6 +6,20 @@ It allows you define what "distracting things" are for you using a schedule. For
 
 In other words, if you are obsessive about personal productivity you can define what you want a productive day to look like and then use Hyper Focus to enforce it.
 
+## Installation
+
+```shell
+brew install iloveitaly/tap/hyper-focus
+```
+
+You can then start the service via:
+
+```shell
+brew services start iloveitaly/tap/hyper-focus
+```
+
+Or download a release build and run it manually
+
 ## Why do this?
 
 - https://marco.org/2015/10/30/automatic-social-discipline

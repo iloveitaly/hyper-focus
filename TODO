@@ -1,8 +1,6 @@
 ## Next
 
 - [ ] execute wake and initial wake scripts
-- [ ] launch daemon config from sleepwatcher
-- [ ] brew installation https://github.com/splitjoin/homebrew-splitjoin
 - [ ] Would be cool to have a regex match option, not sure how this would fit into the config schema
 - [ ] custom redirect page
 - [ ] YouTube video about how it works
@@ -15,3 +13,4 @@
 - [ ] I wonder if there is a tool out there to generate a ui based off a json schema?
 - [ ] make a logo with AI? https://www.shopify.com/tools/logo-maker/onboarding/brand-values
 - [ ] CLI help text and inputs https://github.com/jakeheis/SwiftCLI
+- [ ] If there are no events in a certain period of time, we should trigger an action anywayg
