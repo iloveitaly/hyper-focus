@@ -11,13 +11,11 @@ on:
 #     tags:
 #       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
-# TODO need ventura macos version https://github.com/actions/runner-images/issues/6426
-# https://github.com/actions/runner-images/issues/6642
 jobs:
   build:
-    # runs-on: macos-latest
-    # https://github.com/actions/runner-images/issues/6384
-    runs-on: macos-12
+    # TODO need ventura macos version https://github.com/actions/runner-images/issues/6426 to fix weird test issue
+    #   https://github.com/actions/runner-images/issues/6642
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,11 +26,8 @@ jobs:
       - name: setup Xcode version
         run: sudo xcode-select -s /Applications/Xcode_14.2.app
 
-      # - name: Build
-      #   run: swift build -v
       - name: Test
-        # run: swift test -vv
-        run: swift test -vv -Xswiftc "-target" -Xswiftc "x86_64-apple-macosx12.0"
+        run: swift test -vv
 
       - name: Build Release Binary
         run: swift build -v -c release --arch arm64 --arch x86_64
