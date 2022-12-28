@@ -33,7 +33,7 @@ jobs:
         run: swift build -v -c release --arch arm64 --arch x86_64
 
       - name: Zip Release Binary
-        run: zip -r hyper-focus.zip .build/apple/Products/Release/hyper-focus
+        run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
 
       - name: Release
         uses: softprops/action-gh-release@v1
