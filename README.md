@@ -76,8 +76,9 @@ Instead of UI, I've opted to a simple HTTP API that can be used to power a [Rayc
 
 ## Development
 
-- `swift run`
-- `cp ./config.json ~/.config/focus/config.json`
+- Run the binary manually `swift run`
+- Copy local config `cp ./config.json ~/.config/focus/config.json`
+- Generate a new release `git tag v0.1.3 && git push --tags origin HEAD`
 
 ## Tests
 
