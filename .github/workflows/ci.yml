@@ -39,4 +39,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
+          generate_release_notes: true
           draft: true
