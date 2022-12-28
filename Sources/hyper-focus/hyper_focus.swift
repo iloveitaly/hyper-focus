@@ -44,8 +44,11 @@ public enum focus_app {
 
   static func loadConfigurationFromCommandLine() -> Configuration {
     let configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
+    debug("Loading configuration from \(configPath.absoluteString)")
+
     let configData = try! Data(contentsOf: configPath)
     let config = try! JSONDecoder().decode(Configuration.self, from: configData)
+
     return config
   }
 
@@ -116,6 +119,7 @@ class SystemObserver {
   }
 
   func windowTitleChanged(
+    // TODO we don't use any of these variables, so we can just name them as such
     _: AXObserver,
     axElement: AXUIElement,
     notification _: CFString
