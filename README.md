@@ -14,7 +14,7 @@ In other words, if you are obsessive about personal productivity you can define 
 ## Features
 
 - Fast, CLI-oriented tool
-- Configuration in a simple JSON file
+- Configuration in a simple JSON file ([here's an example](https://github.com/iloveitaly/dotfiles/blob/master/.config/focus/config.json))
 - Very memory efficient, even over long periods of time
 - No weird hangs or freezes like Focus app
 - Sleep watching functionality so I don't need to rely on the abandonded sleepwatcher tool
