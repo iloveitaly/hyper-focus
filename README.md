@@ -18,7 +18,25 @@ You can then start the service via:
 brew services start iloveitaly/tap/hyper-focus
 ```
 
-Or download a release build and run it manually
+When running via a brew service, the logs are located in `$(brew --prefix)/var/log/`.
+
+Or, download a release build and run it manually
+
+### Usage
+
+```shell
+hyper-focus --help
+
+OVERVIEW: A daemon process which helps you focus on your work.
+
+USAGE: hyper-focus [--version] [--configuration <configuration>]
+
+OPTIONS:
+  --version               Print out the version of the application.
+  -c, --configuration <configuration>
+                          Path to the configuration file
+  -h, --help              Show help information.
+```
 
 ## Why do this?
 
