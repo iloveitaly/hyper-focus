@@ -33,37 +33,26 @@ var systemObserver: SystemObserver?
 var sleepWatcher: SleepWatcher?
 var apiServer: ApiServer?
 
-@main
 public enum focus_app {
-  public static func main() {
-    start()
+  public static func main(_ userConfigPath: String?) {
+    let configuration = loadConfigurationFromCommandLine(userConfigPath)
+
+    start(configuration)
 
     // dispatchMain() is NOT identical, there are slight differences
     RunLoop.main.run()
   }
 
-  static func loadConfigurationFromCommandLine() -> Configuration {
-    let configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
-    debug("Loading configuration from \(configPath.absoluteString)")
-
-    let configData = try! Data(contentsOf: configPath)
-    let config = try! JSONDecoder().decode(Configuration.self, from: configData)
-
-    return config
-  }
-
-  static func start() {
+  static func start(_ configuration: Configuration) {
     guard checkAccess() else {
       // TODO: I don't really know what this dispatchqueue business does
       DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-        start()
+        start(configuration)
       }
+
       return
     }
 
-    // create configuration manager
-    // TODO: could allow for a ui and storing config outside of the default location
-    let configuration = loadConfigurationFromCommandLine()
 
     let scheduleManager = ScheduleManager(
       configuration: configuration
@@ -80,6 +69,25 @@ public enum focus_app {
     )
 
     apiServer = ApiServer(scheduleManager: scheduleManager)
+  }
+
+
+  static func loadConfigurationFromCommandLine(_ userConfigPath: String?) -> Configuration {
+    var configPath: URL?
+
+    // is userConfigPath a valid file URL?
+    if userConfigPath != nil && FileManager.default.fileExists(atPath: userConfigPath!) {
+      configPath = URL(fileURLWithPath: userConfigPath!)
+    } else {
+      configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
+    }
+
+    debug("Loading configuration from \(configPath!.absoluteString)")
+
+    let configData = try! Data(contentsOf: configPath!)
+    let config = try! JSONDecoder().decode(Configuration.self, from: configData)
+
+    return config
   }
 }
 
