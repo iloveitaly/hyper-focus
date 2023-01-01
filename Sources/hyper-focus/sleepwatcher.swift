@@ -28,7 +28,8 @@ class SleepWatcher {
       log("first wake of the day")
 
       if let initialWake = configuration.initial_wake {
-        executeTask(initialWake)
+        // executeTask(initialWake)
+        executeTaskWithName(initialWake, "initial_wake")
       }
     }
 
@@ -39,7 +40,8 @@ class SleepWatcher {
       return
     }
 
-    executeTask(wakeScript)
+    // executeTask(wakeScript)
+    executeTaskWithName(wakeScript, "wake")
   }
 
   func executeTask(_ taskPath: String) {
@@ -76,5 +78,55 @@ class SleepWatcher {
     }
 
     log("script executed successfully")
+  }
+
+  func executeTaskWithName(_ rawCommandPath: String, _ taskName: String) {
+    let expandedCommandPath = NSString(string: rawCommandPath).expandingTildeInPath
+
+    if !FileManager.default.fileExists(atPath: expandedCommandPath) {
+      error("script does not exist: \(expandedCommandPath)")
+      return
+    }
+
+    log("running script \(expandedCommandPath)")
+
+    let process: Process = Process()
+    let pipe = Pipe()
+    let timeout = 120.0
+
+    // no user input
+    process.standardInput = FileHandle.nullDevice
+    process.standardOutput = pipe
+    process.standardError = pipe
+    process.arguments = ["-c", expandedCommandPath]
+    process.launchPath = "/bin/bash"
+
+    let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
+    timer.schedule(deadline: .now() + timeout)
+    timer.setEventHandler {
+      process.terminate()
+    }
+    timer.resume()
+
+    process.launch()
+    process.waitUntilExit()
+    timer.cancel()
+
+    let status = process.terminationStatus
+
+    if status != 0 {
+      error("script \(expandedCommandPath) exited with error code \(status)")
+    } else {
+      log("script executed successfully")
+    }
+
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let resultString = String(data: data, encoding: .utf8)
+    let prefixedString = prefixLines(resultString!, taskName)
+    log("script output:\n\(prefixedString)")
+  }
+
+  func prefixLines(_ str: String, _ prefix: String) -> String {
+    return str.split(separator: "\n").map { "[task-runner] [\(prefix)] \($0)" }.joined(separator: "\n")
   }
 }

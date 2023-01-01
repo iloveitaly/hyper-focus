@@ -1,7 +1,5 @@
 ## Next
 
-- [ ] execute wake and initial wake scripts
-  - [ ] This is working, but stderr seems to get stuck. Need to understand what is going on here and implement timeouts
 - [ ] Would be cool to have a regex match option, not sure how this would fit into the config schema
 - [ ] custom redirect page for browsers, could be a fun way to redirect to quotes or something
 - [ ] reload configuration endpoint
