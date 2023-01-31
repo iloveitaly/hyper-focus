@@ -27,11 +27,11 @@ Or, download a release build and run it manually
 You may want to run hyper-focus as root. For instance, if you are modifying the `/etc/hosts` file on initial wake,
 you need to run the process as root. Here's how to do it:
 
-* Start the non-root service using `brew services start hyper-focus`
-* Copy the existing plist `cat ~/Library/LaunchAgents/homebrew.mxcl.hyper-focus.plist | pbcopy`
-* Stop the non-root service `brew services stop hyper-focus`
-* Create the root service `sudo sh -c "pbpaste > /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist"`
-* Start the process as root `sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist`
+- Start the non-root service using `brew services start hyper-focus`
+- Copy the existing plist `cat ~/Library/LaunchAgents/homebrew.mxcl.hyper-focus.plist | pbcopy`
+- Stop the non-root service `brew services stop hyper-focus`
+- Create the root service `sudo sh -c "pbpaste > /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist"`
+- Start the process as root `sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist`
 
 ### Usage
 
