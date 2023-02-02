@@ -18,9 +18,15 @@ You can then start the service via:
 brew services start iloveitaly/tap/hyper-focus
 ```
 
-When running via a brew service, the logs are located in `$(brew --prefix)/var/log/`.
+When running via a brew service, the logs are located in `$(brew --prefix)/var/log/`. You can tail the logs:
 
-Or, download a release build and run it manually
+```shell
+tail -f $(brew --prefix)/var/log/hyper_focus.log
+```
+
+Or, download a release build and run it manually.
+
+You'll need to grant accessibility permissions to the binary, which you can find via `brew which hyper-focus`.
 
 ### Running a Brew Service as Root
 
@@ -32,6 +38,23 @@ you need to run the process as root. Here's how to do it:
 - Stop the non-root service `brew services stop hyper-focus`
 - Create the root service `sudo sh -c "pbpaste > /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist"`
 - Start the process as root `sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist`
+
+Here's a script:
+
+```shell
+brew services start hyper-focus
+cat ~/Library/LaunchAgents/homebrew.mxcl.hyper-focus.plist | pbcopy
+brew services stop hyper-focus
+
+sudo sh -c "pbpaste > /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist"
+sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist
+```
+
+To unload
+
+```
+sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist
+```
 
 ### Usage
 
