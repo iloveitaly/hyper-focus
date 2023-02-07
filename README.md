@@ -52,7 +52,7 @@ sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist
 
 To unload
 
-```
+```shell
 sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist
 ```
 
