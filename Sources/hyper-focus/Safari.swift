@@ -4,37 +4,41 @@ import ScriptingBridge
 // https://github.com/tingraldi/SwiftScripting/blob/4346eba0f47e806943601f5fb2fe978e2066b310/Frameworks/SafariScripting/SafariScripting/Safari.swift#L37
 
 // MARK: SafariSaveOptions
-@objc public enum SafariSaveOptions : AEKeyword {
-    case yes = 0x79657320 /* 'yes ' */
-    case no = 0x6e6f2020 /* 'no  ' */
-    case ask = 0x61736b20 /* 'ask ' */
+
+@objc public enum SafariSaveOptions: AEKeyword {
+    case yes = 0x7965_7320 /* 'yes ' */
+    case no = 0x6E6F_2020 /* 'no  ' */
+    case ask = 0x6173_6B20 /* 'ask ' */
 }
 
 // MARK: SafariPrintingErrorHandling
-@objc public enum SafariPrintingErrorHandling : AEKeyword {
-    case standard = 0x6c777374 /* 'lwst' */
-    case detailed = 0x6c776474 /* 'lwdt' */
+
+@objc public enum SafariPrintingErrorHandling: AEKeyword {
+    case standard = 0x6C77_7374 /* 'lwst' */
+    case detailed = 0x6C77_6474 /* 'lwdt' */
 }
 
 // MARK: SafariGenericMethods
+
 @objc public protocol SafariGenericMethods {
     @objc optional func closeSaving(_ saving: SafariSaveOptions, savingIn: URL!) // Close a document.
     @objc optional func saveIn(_ in_: URL!, as: Any!) // Save a document.
-    @objc optional func printWithProperties(_ withProperties: [AnyHashable : Any]!, printDialog: Bool) // Print a document.
+    @objc optional func printWithProperties(_ withProperties: [AnyHashable: Any]!, printDialog: Bool) // Print a document.
     @objc optional func delete() // Delete an object.
-    @objc optional func duplicateTo(_ to: SBObject!, withProperties: [AnyHashable : Any]!) // Copy an object.
+    @objc optional func duplicateTo(_ to: SBObject!, withProperties: [AnyHashable: Any]!) // Copy an object.
     @objc optional func moveTo(_ to: SBObject!) // Move an object to a new location.
 }
 
 // MARK: SafariApplication
+
 @objc public protocol SafariApplication: SBApplicationProtocol {
     @objc optional func documents() -> SBElementArray
     @objc optional func windows() -> SBElementArray
     @objc optional var name: String { get } // The name of the application.
     @objc optional var frontmost: Bool { get } // Is this the active application?
     @objc optional var version: String { get } // The version number of the application.
-    @objc optional func `open`(_ x: Any!) -> Any // Open a document.
-    @objc optional func print(_ x: Any!, withProperties: [AnyHashable : Any]!, printDialog: Bool) // Print a document.
+    @objc optional func open(_ x: Any!) -> Any // Open a document.
+    @objc optional func print(_ x: Any!, withProperties: [AnyHashable: Any]!, printDialog: Bool) // Print a document.
     @objc optional func quitSaving(_ saving: SafariSaveOptions) // Quit the application.
     @objc optional func exists(_ x: Any!) -> Bool // Verify that an object exists.
     @objc optional func addReadingListItem(_ x: String!, andPreviewText: String!, withTitle: String!) // Add a new Reading List item with the given URL. Allows a custom title and preview text to be specified.
@@ -43,9 +47,11 @@ import ScriptingBridge
     @objc optional func searchTheWebIn(_ in_: Any!, for for_: String!) // Searches the web using Safari's current search provider.
     @objc optional func showBookmarks() // Shows Safari's bookmarks.
 }
+
 extension SBApplication: SafariApplication {}
 
 // MARK: SafariDocument
+
 @objc public protocol SafariDocument: SBObjectProtocol, SafariGenericMethods {
     @objc optional var name: String { get } // Its name.
     @objc optional var modified: Bool { get } // Has it been modified since the last save?
@@ -55,9 +61,11 @@ extension SBApplication: SafariApplication {}
     @objc optional var text: String { get } // The text of the web page currently loaded in the document. Modifications to text aren't reflected on the web page.
     @objc optional func setURL(_ URL: String!) // The current URL of the document.
 }
+
 extension SBObject: SafariDocument {}
 
 // MARK: SafariWindow
+
 @objc public protocol SafariWindow: SBObjectProtocol, SafariGenericMethods {
     @objc optional var name: String { get } // The title of the window.
     @objc optional func id() -> Int // The unique identifier of the window.
@@ -80,9 +88,11 @@ extension SBObject: SafariDocument {}
     @objc optional var currentTab: SafariTab { get } // The current tab.
     @objc optional func setCurrentTab(_ currentTab: SafariTab!) // The current tab.
 }
+
 extension SBObject: SafariWindow {}
 
 // MARK: SafariTab
+
 @objc public protocol SafariTab: SBObjectProtocol, SafariGenericMethods {
     @objc optional var source: String { get } // The HTML source of the web page currently loaded in the tab.
     @objc optional var URL: String { get } // The current URL of the tab.
@@ -92,5 +102,5 @@ extension SBObject: SafariWindow {}
     @objc optional var name: String { get } // The name of the tab.
     @objc optional func setURL(_ URL: String!) // The current URL of the tab.
 }
-extension SBObject: SafariTab {}
 
+extension SBObject: SafariTab {}

@@ -1,14 +1,13 @@
-import XCTest
 @testable import hyper_focus
+import XCTest
 
 final class hyper_focusTests: XCTestCase {
     func testURLEquality() throws {
         XCTAssertEqual(true,
-            ActionHandler.isSubsetOfUrl(
-                supersetUrlString: "https://www.google.com/search?client=safari&rls=en&q=world+news&ie=UTF-8&oe=UTF-8",
-                subsetUrlString: "https://www.google.com/search?q=world+news"
-            )
-        )
+                       ActionHandler.isSubsetOfUrl(
+                           supersetUrlString: "https://www.google.com/search?client=safari&rls=en&q=world+news&ie=UTF-8&oe=UTF-8",
+                           subsetUrlString: "https://www.google.com/search?q=world+news"
+                       ))
     }
 
     func testArrayURLEquality() throws {

@@ -3,7 +3,7 @@ import ArgumentParser
 @main
 struct HyperFocus: ParsableCommand {
     static let configuration = CommandConfiguration(
-      abstract: "A daemon process which helps you focus on your work."
+        abstract: "A daemon process which helps you focus on your work."
     )
 
     @Flag(help: "Print out the version of the application.")
@@ -13,12 +13,12 @@ struct HyperFocus: ParsableCommand {
     var configuration: String? = nil
 
     mutating func run() throws {
-      if(version) {
-        // TODO get latest git tag at swift compile time, doesn't seem like this is easy
-        print("0.1.6")
-        return
-      }
+        if version {
+            // TODO: get latest git tag at swift compile time, doesn't seem like this is easy
+            print("0.1.6")
+            return
+        }
 
-      focus_app.main(configuration)
+        focus_app.main(configuration)
     }
 }

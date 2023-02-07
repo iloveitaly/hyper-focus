@@ -12,11 +12,12 @@ import ScriptingBridge
 }
 
 // MARK: Google
+
 @objc public protocol Google {
     @objc optional func saveIn(_ in_: URL!, as: String!) // Save an object.
     @objc optional func close() // Close a window.
     @objc optional func delete() // Delete an object.
-    @objc optional func duplicateTo(_ to: SBObject!, withProperties: [AnyHashable : Any]!) -> SBObject // Copy object(s) and put the copies at a new location.
+    @objc optional func duplicateTo(_ to: SBObject!, withProperties: [AnyHashable: Any]!) -> SBObject // Copy object(s) and put the copies at a new location.
     @objc optional func moveTo(_ to: SBObject!) -> SBObject // Move object(s) to a new location.
     @objc optional func print() // Print an object.
     @objc optional func reload() // Reload a tab.
@@ -34,21 +35,24 @@ import ScriptingBridge
 }
 
 // MARK: GoogleChromeApplication
+
 @objc public protocol GoogleChromeApplication: SBApplicationProtocol {
     @objc optional func windows() -> SBElementArray
     @objc optional var name: String { get } // The name of the application.
     @objc optional var frontmost: Bool { get } // Is this the frontmost (active) application?
     @objc optional var version: String { get } // The version of the application.
-    @objc optional func `open`(_ x: [URL]!) // Open a document.
+    @objc optional func open(_ x: [URL]!) // Open a document.
     @objc optional func quit() // Quit the application.
     @objc optional func exists(_ x: Any!) -> Bool // Verify if an object exists.
     @objc optional func bookmarkFolders() -> SBElementArray
     @objc optional var bookmarksBar: GoogleChromeBookmarkFolder { get } // The bookmarks bar bookmark folder.
     @objc optional var otherBookmarks: GoogleChromeBookmarkFolder { get } // The other bookmarks bookmark folder.
 }
+
 extension SBApplication: GoogleChromeApplication {}
 
 // MARK: GoogleChromeWindow
+
 @objc public protocol GoogleChromeWindow: SBObjectProtocol {
     @objc optional func tabs() -> SBElementArray
     @objc optional var givenName: String { get } // The given name of the window.
@@ -75,9 +79,11 @@ extension SBApplication: GoogleChromeApplication {}
     @objc optional func setMode(_ mode: String!) // Represents the mode of the window which can be 'normal' or 'incognito', can be set only once during creation of the window.
     @objc optional func setActiveTabIndex(_ activeTabIndex: Int) // The index of the active tab.
 }
+
 extension SBObject: GoogleChromeWindow {}
 
 // MARK: GoogleChromeTab
+
 @objc public protocol GoogleChromeTab: SBObjectProtocol {
     @objc optional func id() -> Int // Unique ID of the tab.
     @objc optional var title: String { get } // The title of the tab.
@@ -85,9 +91,11 @@ extension SBObject: GoogleChromeWindow {}
     @objc optional var loading: Bool { get } // Is loading?
     @objc optional func setURL(_ URL: String!) // The url visible to the user.
 }
+
 extension SBObject: GoogleChromeTab {}
 
 // MARK: GoogleChromeBookmarkFolder
+
 @objc public protocol GoogleChromeBookmarkFolder: SBObjectProtocol {
     @objc optional func bookmarkFolders() -> SBElementArray
     @objc optional func bookmarkItems() -> SBElementArray
@@ -96,9 +104,11 @@ extension SBObject: GoogleChromeTab {}
     @objc optional var index: NSNumber { get } // Returns the index with respect to its parent bookmark folder.
     @objc optional func setTitle(_ title: String!) // The title of the folder.
 }
+
 extension SBObject: GoogleChromeBookmarkFolder {}
 
 // MARK: GoogleChromeBookmarkItem
+
 @objc public protocol GoogleChromeBookmarkItem: SBObjectProtocol {
     @objc optional func id() -> Int // Unique ID of the bookmark item.
     @objc optional var title: String { get } // The title of the bookmark item.
@@ -107,5 +117,5 @@ extension SBObject: GoogleChromeBookmarkFolder {}
     @objc optional func setTitle(_ title: String!) // The title of the bookmark item.
     @objc optional func setURL(_ URL: String!) // The URL of the bookmark.
 }
-extension SBObject: GoogleChromeBookmarkItem {}
 
+extension SBObject: GoogleChromeBookmarkItem {}

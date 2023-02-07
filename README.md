@@ -56,6 +56,8 @@ To unload
 sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.hyper-focus.plist
 ```
 
+(TODO: still need to ensure that this works on restart, since it seems to do the same operation as `sudo brew services ...`)
+
 ### Usage
 
 ```shell
