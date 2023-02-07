@@ -15,7 +15,7 @@ struct HyperFocus: ParsableCommand {
     mutating func run() throws {
         if version {
             // TODO: get latest git tag at swift compile time, doesn't seem like this is easy
-            print("0.1.6")
+            print("0.1.7")
             return
         }
 
