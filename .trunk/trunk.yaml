@@ -15,6 +15,11 @@ lint:
     - markdownlint@0.33.0
     - gitleaks@8.15.3
     - git-diff-check
+  ignore:
+    - linters: [swiftlint]
+      paths:
+        - Sources/hyper-focus/Google Chrome.swift
+        - Sources/hyper-focus/Safari.swift
 runtimes:
   enabled:
     - go@1.18.3

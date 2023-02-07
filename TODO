@@ -1,5 +1,6 @@
 ## Next
 
+- [ ] swiftformat needs to be updated to play well with swiftlint
 - [ ] Would be cool to have a regex match option, not sure how this would fit into the config schema
 - [ ] custom redirect page for browsers, could be a fun way to redirect to quotes or something
 - [ ] reload configuration endpoint
