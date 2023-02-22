@@ -21,13 +21,18 @@ func logPrefix(_ level: String) -> String {
 public func debug(_ msg: String) {
     if logLevel == "DEBUG" {
         print("\(logPrefix("DEBUG")) \(msg)")
+        fflush(stdout)
     }
 }
 
 public func log(_ msg: String) {
-    print("\(logPrefix("INFO")) \(msg)")
+    if logLevel == "DEBUG" || logLevel == "INFO" {
+        print("\(logPrefix("INFO")) \(msg)")
+        fflush(stdout)
+    }
 }
 
 public func error(_ msg: String) {
     print("\(logPrefix("ERROR")) \(msg)")
+    fflush(stdout)
 }
