@@ -4,11 +4,15 @@ import Foundation
 class SleepWatcher {
     let scheduleManager: ScheduleManager
     let configuration: Configuration
-    var lastWakeTime: Date?
+    var lastWakeTime: Date
 
     init(scheduleManager: ScheduleManager, configuration: Configuration) {
         self.scheduleManager = scheduleManager
         self.configuration = configuration
+
+        // technically, not the last wake time, but we want to set an initial value on startup
+        // to detect the next wake time tomorrow
+        lastWakeTime = Date()
 
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
@@ -24,11 +28,12 @@ class SleepWatcher {
         let currentDate = Date()
 
         // is the last wake time non-nil and on a different day?
-        if let lastWakeTime = lastWakeTime, !Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate) {
+        // TODO: does this respect the local computer's timezone
+        if !Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate) {
+            debug("last wake was \(lastWakeTime) current time is \(currentDate)")
             log("first wake of the day")
 
             if let initialWake = configuration.initial_wake {
-                // executeTask(initialWake)
                 executeTaskWithName(initialWake, "initial_wake")
             }
         }
@@ -40,46 +45,10 @@ class SleepWatcher {
             return
         }
 
-        // executeTask(wakeScript)
         executeTaskWithName(wakeScript, "wake")
     }
 
-    func executeTask(_ taskPath: String) {
-        let expandedScript = NSString(string: taskPath).expandingTildeInPath
-
-        if !FileManager.default.fileExists(atPath: expandedScript) {
-            error("script does not exist: \(expandedScript)")
-            return
-        }
-
-        log("running script \(expandedScript)")
-
-        // TODO: need some sort of timeout and not wait for input
-        //      https://developer.apple.com/documentation/dispatch/dispatchgroup/1780590-wait
-
-        let task = Process()
-        task.standardInput = FileHandle.nullDevice
-        task.launchPath = expandedScript
-
-        do {
-            try task.run()
-        } catch {
-            log("failed to run script \(expandedScript) \(error)")
-            return
-        }
-
-        task.waitUntilExit()
-
-        let status = task.terminationStatus
-
-        if status != 0 {
-            error("script \(expandedScript) exited with error code \(status)")
-            return
-        }
-
-        log("script executed successfully")
-    }
-
+    // TODO: can be used to run any script, we should add support for entry/exit scripts on a schedule
     func executeTaskWithName(_ rawCommandPath: String, _ taskName: String) {
         let expandedCommandPath = NSString(string: rawCommandPath).expandingTildeInPath
 
@@ -110,9 +79,10 @@ class SleepWatcher {
             process.launchPath = "/bin/bash"
         }
 
-        let timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
+        let timer: DispatchSourceTimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
         timer.schedule(deadline: .now() + timeout)
         timer.setEventHandler {
+            error("\(timeout) second timeout reached, killing script \(expandedCommandPath)")
             process.terminate()
         }
         timer.resume()
