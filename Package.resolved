@@ -3,7 +3,7 @@
     {
       "identity" : "ambassador",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/envoy/Ambassador.git",
+      "location" : "https://github.com/envoy/Ambassador",
       "state" : {
         "revision" : "447cf56f692999153bd261b1775ea4a58f7f7be9",
         "version" : "4.0.5"
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/envoy/Embassy.git",
       "state" : {
-        "revision" : "72e53b2b76023556febdfe0cf5bc8d64018f9c18",
-        "version" : "4.1.4"
+        "revision" : "8469f2c1b334a7c1c3566e2cb2f97826c7cca898",
+        "version" : "4.1.6"
       }
     },
     {
@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "fddd1c00396eed152c45a46bea9f47b98e59301d",
-        "version" : "1.2.0"
+        "revision" : "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
+        "version" : "1.2.2"
       }
     }
   ],
