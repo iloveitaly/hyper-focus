@@ -6,12 +6,18 @@ enum BrowserTab {
     case safari(SafariTab)
 }
 
-struct SwitchingActivity {
+// https://stackoverflow.com/questions/24068506/how-can-i-change-the-textual-representation-displayed-for-a-type-in-swift
+struct SwitchingActivity: CustomStringConvertible {
     let app: String
     let title: String
     let configuration: Configuration.ScheduleItem
+
     var activeTab: BrowserTab?
     var url: String?
+
+    var description: String {
+        return "SwitchingActivity: \(app) - \(title)"
+    }
 }
 
 struct Configuration: Codable {
