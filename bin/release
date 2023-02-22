@@ -1,0 +1,16 @@
+#!/bin/bash
+cd "${0%/*}/.."
+
+version=$(git tag --list | tail -n 1)
+
+last_num=$(echo "$version" | awk -F. '{print $3}')
+next_num=$((last_num + 1))
+new_version=$(echo "$version" | sed "s/\.[^.]*$/.$next_num/")
+
+echo "New Version: $new_version"
+
+file_with_version=Sources/hyper-focus/command.swift
+sed -i "" "s/$version/$new_version/" $file_with_version
+git commit -m "Bump version to $new_version" $file_with_version
+
+git tag $new_version
