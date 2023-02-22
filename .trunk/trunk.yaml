@@ -1,15 +1,15 @@
 version: 0.1
 cli:
-  version: 1.4.1
+  version: 1.5.0
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.9
+      ref: v0.0.11
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - swiftformat@0.50.8
-    - prettier@2.8.3
+    - swiftformat@0.50.9
+    - prettier@2.8.4
     - actionlint@1.6.23
     - markdownlint@0.33.0
     - gitleaks@8.15.3
