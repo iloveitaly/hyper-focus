@@ -4,6 +4,8 @@ import Foundation
 class SleepWatcher {
     let scheduleManager: ScheduleManager
     let configuration: Configuration
+    let executionLocks: [String: Bool] = [:]
+
     var lastWakeTime: Date
 
     init(scheduleManager: ScheduleManager, configuration: Configuration) {
@@ -24,8 +26,11 @@ class SleepWatcher {
         log("sleepwatcher initialized")
     }
 
-    @objc func awakeFromSleep() {
+    @objc func awakeFromSleep(_ notification: Notification) {
         let currentDate = Date()
+
+        // https://cs.github.com/rxhanson/Rectangle/blob/34753b6c9a75055cbc6b6e8d56bd0882760b5af7/Rectangle/ApplicationToggle.swift?q=NSWorkspace.shared.notificationCenter.addObserver+lang%3Aswift#L94
+        debug("received wake notification at \(notification)")
 
         // is the last wake time non-nil and on a different day?
         // TODO: does this respect the local computer's timezone
