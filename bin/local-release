@@ -1,0 +1,19 @@
+# Description: for installing the locall-built production release for debugging
+#              interestingly enough, when this is run in vs code weird things happen with
+#              the NSAlert and UI elements. Run in iTerm.
+#
+#              I'm also pretty certain you need to restart macos if accessibility permissions get janked
+
+sudo brew services stop hyper-focus -v -d
+
+current_location=$(readlink -f $(which hyper-focus))
+new_build_location=.build/apple/Products/Release/hyper-focus
+
+sudo cp $new_build_location $current_location
+sudo brew services start hyper-focus -v -d
+
+# TODO remove logs?
+
+sleep 10
+
+tail -n 10000 $(brew --prefix)/var/log/hyper_focus.log
