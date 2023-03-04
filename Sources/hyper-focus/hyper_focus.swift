@@ -39,6 +39,21 @@ var systemObserver: SystemObserver?
 var sleepWatcher: SleepWatcher?
 var apiServer: ApiServer?
 
+// https://cs.github.com/OpenEmu/OpenEmu/blob/6d25e3da75558bf976f9efee3688fdf8f6c51d8f/OpenEmu/AppDelegate.swift#L450
+func openAccessibilityPreferences() {
+    DispatchQueue.main.async {
+        // can't use `NSApp.activate(ignoringOtherApps: true)` in CLI app
+
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("Accessibility Permissions Required", comment: "")
+        alert.informativeText = "You know the drill. Grant accessibility permissions, and full disk permissions if you have scripts that require access to your file system. \n\nHyper focus will automatically retry in 1 minute."
+        alert.runModal()
+
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+        // NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")!)
+    }
+}
+
 public enum focus_app {
     public static func main(_ userConfigPath: String?) {
         let configuration = loadConfigurationFromCommandLine(userConfigPath)
@@ -51,8 +66,11 @@ public enum focus_app {
 
     static func start(_ configuration: Configuration) {
         guard checkAccess() else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                log("accessibility access not granted, retrying in 30 seconds")
+            log("accessibility access not granted, retrying in 60 seconds")
+
+            openAccessibilityPreferences()
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
                 start(configuration)
             }
 
@@ -283,6 +301,7 @@ class SystemObserver {
     }
 }
 
+// TODO: maybe check full system access as well?
 func checkAccess() -> Bool {
     let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
     let options = [checkOptPrompt: true]
