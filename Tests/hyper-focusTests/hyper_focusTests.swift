@@ -24,4 +24,10 @@ final class hyper_focusTests: XCTestCase {
             subsetUrlString: "http://monica.hole/people?tags[]=vc"
         ))
     }
+
+    func testURLWithoutQueryStringEquality() throws {
+        let exampleUrl = "https://github.com/iloveitaly"
+        XCTAssertEqual(true,
+                       ActionHandler.isSubsetOfUrl(supersetUrlString: exampleUrl, subsetUrlString: exampleUrl))
+    }
 }
