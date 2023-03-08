@@ -40,7 +40,7 @@ enum ActionHandler {
             return false
         }
 
-        // add 'www.' to all block_hosts entries
+        // add 'www.' to all block_hosts entries, this is not something users want to do manually
         let blockHosts = data.configuration.block_hosts
         let blockHostsWithWWW = blockHosts.map { "www.\($0)" }
 
@@ -50,7 +50,7 @@ enum ActionHandler {
             return true
         }
 
-        log("checking urls")
+        debug("checking urls for any blocked matches")
 
         // the urls in the config are expected to have less params, so they are considered the subset
         if data.configuration.block_urls.count > 0, data.configuration.block_urls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) {
@@ -63,6 +63,14 @@ enum ActionHandler {
     }
 
     static func isSubsetOfUrl(supersetUrlString: String, subsetUrlString: String) -> Bool {
+        // TODO: there could be a case where this is no query string, but anchor references; what should we do there?
+        //      anchors can be significant, but only sometimes
+
+        // if the urls are equal, we can consider them a subset
+        if supersetUrlString == subsetUrlString {
+            return true
+        }
+
         let optionalSupersetUrl = URLComponents(string: supersetUrlString)
         let optionalSubsetUrl = URLComponents(string: subsetUrlString)
 
