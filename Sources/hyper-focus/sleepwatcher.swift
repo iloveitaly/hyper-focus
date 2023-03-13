@@ -28,13 +28,15 @@ class SleepWatcher {
 
     @objc func awakeFromSleep(_ notification: Notification) {
         let currentDate = Date()
+        let sameDayAsLastWake = Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate)
 
         // https://cs.github.com/rxhanson/Rectangle/blob/34753b6c9a75055cbc6b6e8d56bd0882760b5af7/Rectangle/ApplicationToggle.swift?q=NSWorkspace.shared.notificationCenter.addObserver+lang%3Aswift#L94
         debug("received wake notification at \(notification)")
+        lastWakeTime = currentDate
 
         // is the last wake time non-nil and on a different day?
         // TODO: does this respect the local computer's timezone
-        if !Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate) {
+        if !sameDayAsLastWake {
             debug("last wake was \(lastWakeTime) current time is \(currentDate)")
             log("first wake of the day")
 
@@ -42,8 +44,6 @@ class SleepWatcher {
                 executeTaskWithName(initialWake, "initial_wake")
             }
         }
-
-        lastWakeTime = currentDate
 
         guard let wakeScript = configuration.wake else {
             log("no wake script configured")
