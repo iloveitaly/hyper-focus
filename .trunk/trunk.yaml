@@ -1,18 +1,20 @@
 version: 0.1
 cli:
-  version: 1.5.0
+  version: 1.7.0
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.11
+      ref: v0.0.14
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - swiftformat@0.50.9
-    - prettier@2.8.4
+    - shellcheck@0.9.0
+    - shfmt@3.5.0
+    - swiftformat@0.51.4
+    - prettier@2.8.7
     - actionlint@1.6.23
     - markdownlint@0.33.0
-    - gitleaks@8.15.3
+    - gitleaks@8.16.2
     - git-diff-check
   ignore:
     - linters: [swiftlint]
@@ -23,8 +25,8 @@ lint:
     - swiftlint@0.50.3
 runtimes:
   enabled:
-    - go@1.18.3
-    - node@16.14.2
+    - go@1.19.5
+    - node@18.12.1
 actions:
   enabled:
     - trunk-announce
