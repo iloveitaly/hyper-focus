@@ -25,6 +25,7 @@ struct Configuration: Codable {
         var start: Int?
         var end: Int?
         var name: String?
+        var start_script: String?
         var block_hosts: [String]
         var block_urls: [String]
         var block_apps: [String]
@@ -50,6 +51,8 @@ func openAccessibilityPreferences() {
         alert.runModal()
 
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+
+        // TODO: if accessability is granted, then open full disk access
         // NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk")!)
     }
 }
@@ -65,7 +68,7 @@ public enum focus_app {
     }
 
     static func start(_ configuration: Configuration) {
-        guard checkAccess() else {
+        guard checkAccessibilityAccess() else {
             log("accessibility access not granted, retrying in 60 seconds")
 
             openAccessibilityPreferences()
@@ -302,7 +305,7 @@ class SystemObserver {
 }
 
 // TODO: maybe check full system access as well?
-func checkAccess() -> Bool {
+func checkAccessibilityAccess() -> Bool {
     let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString
     let options = [checkOptPrompt: true]
     let accessEnabled = AXIsProcessTrustedWithOptions(options as CFDictionary?)

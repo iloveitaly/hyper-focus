@@ -4,6 +4,8 @@ import Foundation
 // TODO: is enum really the right thing to do here? Unsure :)
 //       best way I could find to group together related functions
 
+// once a "action" (window change, etc) is detected and normalized, it's passed to the ActionHandler to determine
+// exactly how to handle it.
 enum ActionHandler {
     static func handleAction(_ data: SwitchingActivity) {
         log("handling action: \(data)")

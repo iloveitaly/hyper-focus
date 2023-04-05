@@ -103,6 +103,10 @@ class ScheduleManager {
             log("changing schedule to \(schedule ?? nil)")
             // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
             self.schedule = schedule
+
+            if schedule != nil, schedule!.start_script != nil {
+                TaskRunner.executeTaskWithName(schedule!.start_script!, "start_script")
+            }
         }
     }
 
