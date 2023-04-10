@@ -7,10 +7,13 @@ class SleepWatcher {
     let scheduleManager: ScheduleManager
     let configuration: Configuration
     let dateGenerator: DateGenerator
+    let idleChecker: IdleChecker
 
     var lastWakeTime: Date
 
     init(scheduleManager: ScheduleManager, configuration: Configuration, dateGenerator: @escaping DateGenerator = { Date() }) {
+        idleChecker = IdleChecker()
+
         self.scheduleManager = scheduleManager
         self.configuration = configuration
 
@@ -31,18 +34,21 @@ class SleepWatcher {
         log("sleepwatcher initialized")
     }
 
+    // https://cs.github.com/rxhanson/Rectangle/blob/34753b6c9a75055cbc6b6e8d56bd0882760b5af7/Rectangle/ApplicationToggle.swift?q=NSWorkspace.shared.notificationCenter.addObserver+lang%3Aswift#L94
     @objc func awakeFromSleep(_: Notification) {
-        let currentDate = dateGenerator()
-        let sameDayAsLastWake = Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate)
+        debug("received wake notification, last wake was \(lastWakeTime) current time is \(dateGenerator())")
 
-        // https://cs.github.com/rxhanson/Rectangle/blob/34753b6c9a75055cbc6b6e8d56bd0882760b5af7/Rectangle/ApplicationToggle.swift?q=NSWorkspace.shared.notificationCenter.addObserver+lang%3Aswift#L94
-        debug("received wake notification, last wake was \(lastWakeTime) current time is \(currentDate)")
-        lastWakeTime = currentDate
+        let isFirstWakeOfTheDay = firstWakeOfTheDay()
+
+        // if the computer is left on without sleeping, we want to treat the next wake as the first one
+        let isFirstWakeInAwhile = idleChecker.getAndClearWasEffectivelySleeping()
+
+        lastWakeTime = dateGenerator()
 
         // is the last wake time non-nil and on a different day?
         // TODO: does this respect the local computer's timezone
-        if !sameDayAsLastWake {
-            log("first wake of the day")
+        if isFirstWakeOfTheDay || isFirstWakeInAwhile {
+            log("first wake of the day \(isFirstWakeOfTheDay) or first wake in a while \(isFirstWakeInAwhile))")
 
             if let initialWake = configuration.initial_wake {
                 TaskRunner.executeTaskWithName(initialWake, "initial_wake")
@@ -55,5 +61,11 @@ class SleepWatcher {
         }
 
         TaskRunner.executeTaskWithName(wakeScript, "wake")
+    }
+
+    private func firstWakeOfTheDay() -> Bool {
+        let currentDate = dateGenerator()
+        let sameDayAsLastWake = Calendar.current.isDate(lastWakeTime, inSameDayAs: currentDate)
+        return !sameDayAsLastWake
     }
 }
