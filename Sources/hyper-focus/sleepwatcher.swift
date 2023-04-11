@@ -31,13 +31,19 @@ class SleepWatcher {
             object: nil
         )
 
-        NotificationCenter.default.addObserver(self, selector: #selector(userLoggedIn), name: NSWorkspace.sessionDidBecomeActiveNotification, object: nil)
+        // https://cs.github.com/glushchenko/fsnotes/blob/a1c0d9a2b955dffa63c1841cdccc72df0ea24f78/FSNotes/ViewController.swift?q=NSWorkspace.sessionDidBecomeActiveNotification+lang%3Aswift#L507
+        DistributedNotificationCenter.default().addObserver(
+            self,
+            selector: #selector(userDidUnlockScreen(note:)),
+            name: Notification.Name("com.apple.screenIsUnlocked"),
+            object: nil
+        )
 
         log("sleepwatcher initialized")
     }
 
     // if the computer is left on without sleeping, we want to treat a login as if if the computer was sleeping
-    @objc func userLoggedIn(note _: Notification) {
+    @objc func userDidUnlockScreen(note _: Notification) {
         debug("user logged in")
 
         let isFirstWakeInAwhile = idleChecker.getAndClearWasEffectivelySleeping()
