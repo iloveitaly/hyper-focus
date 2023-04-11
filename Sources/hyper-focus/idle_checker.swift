@@ -2,16 +2,22 @@ import Foundation
 import Quartz
 
 class IdleChecker {
-    private var wasEffectivelySleeping: Bool
+    private let idleCheckInterval: TimeInterval = 60 * 10
+    private let intervalToConsiderSleeping: TimeInterval = 5 * 60 * 60
+
+    var wasEffectivelySleeping: Bool
+
+    // TODO: bad variable name!
     private var timer: Timer?
 
     init() {
+        log("idle checker initialized")
         wasEffectivelySleeping = false
         startTimer()
     }
 
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: idleCheckInterval, repeats: true) { [weak self] _ in
             self?.checkActivity()
         }
     }
@@ -22,15 +28,18 @@ class IdleChecker {
     }
 
     private func checkActivity() {
-        let idleTime = systemIdleTime()
-        let now = Date()
-        let lastActivity = now.addingTimeInterval(-idleTime)
-        let timeSinceLastActivity = idleTime
-        let calendar = Calendar.current
-        let isInDifferentDay = !calendar.isDate(now, equalTo: lastActivity, toGranularity: .day)
+        if wasEffectivelySleeping {
+            return
+        }
 
-        if timeSinceLastActivity > 5 * 3600, isInDifferentDay {
-            debug("is effectively sleeping")
+        let timeSinceLastActivity = systemIdleTime()
+
+        let now = Date()
+        let lastActivity = now.addingTimeInterval(-timeSinceLastActivity)
+        let isInDifferentDay = !Calendar.current.isDate(lastActivity, inSameDayAs: now)
+
+        if timeSinceLastActivity > intervalToConsiderSleeping, isInDifferentDay {
+            log("is effectively sleeping")
             wasEffectivelySleeping = true
         }
     }
