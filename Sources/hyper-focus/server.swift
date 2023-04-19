@@ -59,9 +59,8 @@ class ApiServer {
             }
 
             router["/reload"] = JSONResponse { _ -> [String: String] in
-                // TODO: hook into configuration manager
-                // self.scheduleManager.reloadConfiguration()
-                ["status": "ok"]
+                self.scheduleManager.reloadConfiguration()
+                return ["status": "ok"]
             }
 
             router["/configurations"] = JSONResponse { _ -> Any in

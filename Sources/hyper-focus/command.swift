@@ -20,6 +20,8 @@ struct HyperFocus: ParsableCommand {
             return
         }
 
-        focus_app.main(configuration)
+        ConfigurationLoader.userConfigurationPath = configuration
+
+        focus_app.main()
     }
 }

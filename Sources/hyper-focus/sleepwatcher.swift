@@ -5,17 +5,15 @@ typealias DateGenerator = () -> Date
 
 class SleepWatcher {
     let scheduleManager: ScheduleManager
-    let configuration: Configuration
     let dateGenerator: DateGenerator
     let idleChecker: IdleChecker
 
     var lastWakeTime: Date
 
-    init(scheduleManager: ScheduleManager, configuration: Configuration, dateGenerator: @escaping DateGenerator = { Date() }) {
+    init(scheduleManager: ScheduleManager, dateGenerator: @escaping DateGenerator = { Date() }) {
         idleChecker = IdleChecker()
 
         self.scheduleManager = scheduleManager
-        self.configuration = configuration
 
         // allows us to time travel within tests
         self.dateGenerator = dateGenerator
@@ -35,6 +33,7 @@ class SleepWatcher {
         DistributedNotificationCenter.default().addObserver(
             self,
             selector: #selector(userDidUnlockScreen(note:)),
+            // unsure why this doesn't use the standard notification center
             name: Notification.Name("com.apple.screenIsUnlocked"),
             object: nil
         )
@@ -80,7 +79,7 @@ class SleepWatcher {
     }
 
     private func runInitialWakeScript() {
-        guard let initialWake = configuration.initial_wake else {
+        guard let initialWake = scheduleManager.configuration.initial_wake else {
             log("no initial wake script configured")
             return
         }
@@ -89,7 +88,7 @@ class SleepWatcher {
     }
 
     private func runWakeScript() {
-        guard let wakeScript = configuration.wake else {
+        guard let wakeScript = scheduleManager.configuration.wake else {
             log("no wake script configured")
             return
         }

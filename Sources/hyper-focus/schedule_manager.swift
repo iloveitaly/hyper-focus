@@ -1,7 +1,34 @@
 import Foundation
 
+enum ConfigurationLoader {
+    // easier to set this globally than to pass it around everywhere
+    static var userConfigurationPath: String?
+
+    static func loadConfiguration() -> Configuration {
+        return loadConfigurationFromPath(userConfigurationPath)
+    }
+
+    private static func loadConfigurationFromPath(_ userConfigPath: String?) -> Configuration {
+        var configPath: URL?
+
+        // is userConfigPath a valid file URL?
+        if userConfigPath != nil && FileManager.default.fileExists(atPath: userConfigPath!) {
+            configPath = URL(fileURLWithPath: userConfigPath!)
+        } else {
+            configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
+        }
+
+        debug("Loading configuration from \(configPath!.absoluteString)")
+
+        let configData = try! Data(contentsOf: configPath!)
+        let config = try! JSONDecoder().decode(Configuration.self, from: configData)
+
+        return config
+    }
+}
+
 class ScheduleManager {
-    let configuration: Configuration
+    var configuration: Configuration
 
     var schedule: Configuration.ScheduleItem?
     var endOverride: Date?
@@ -17,8 +44,8 @@ class ScheduleManager {
         block_apps: []
     )
 
-    init(configuration: Configuration) {
-        self.configuration = configuration
+    init() {
+        configuration = ConfigurationLoader.loadConfiguration()
 
         // setup timer to check if we need to change the schedule
         Timer.scheduledTimer(
@@ -29,6 +56,11 @@ class ScheduleManager {
             repeats: true
         )
 
+        checkSchedule()
+    }
+
+    func reloadConfiguration() {
+        configuration = ConfigurationLoader.loadConfiguration()
         checkSchedule()
     }
 
@@ -100,7 +132,7 @@ class ScheduleManager {
 
     func setSchedule(_ schedule: Configuration.ScheduleItem?) {
         if schedule != self.schedule {
-            log("changing schedule to \(schedule ?? nil)")
+            log("changing schedule to \(String(describing: schedule))")
             // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
             self.schedule = schedule
 
