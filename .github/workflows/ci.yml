@@ -5,7 +5,7 @@ on:
     # branches: [main]
     # Sequence of patterns matched against refs/tags
     tags:
-      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+      - v* # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -24,7 +24,9 @@ jobs:
           check-mode: all
 
       - name: setup Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_14.2.app
+        run: |
+          ls /Applications
+          sudo xcode-select -s /Applications/Xcode_14.2.app
 
       - name: Test
         run: swift test -vv
@@ -39,4 +41,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
+          # TODO this isn't working for me https://github.com/softprops/action-gh-release/issues/191
           generate_release_notes: true
