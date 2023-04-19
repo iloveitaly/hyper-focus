@@ -1,9 +1,8 @@
 import Cocoa
 import Foundation
 
-struct TaskRunner {
-    // TODO: don't allow more than one script type to execute at a time
-    let executionLocks: [String: Bool] = [:]
+enum TaskRunner {
+    static var executionLocks: [String: Bool] = [:]
 
     static func executeTaskWithName(_ rawCommandPath: String, _ taskName: String) {
         let expandedCommandPath = NSString(string: rawCommandPath).expandingTildeInPath
@@ -12,6 +11,13 @@ struct TaskRunner {
             error("script does not exist: \(expandedCommandPath)")
             return
         }
+
+        if executionLocks[taskName] == true {
+            log("Task \(taskName) is already running. Skipping execution.")
+            return
+        }
+
+        executionLocks[taskName] = true
 
         let isCommandExecutable = FileManager.default.isExecutableFile(atPath: expandedCommandPath)
 
@@ -57,6 +63,8 @@ struct TaskRunner {
         let resultString = String(data: data, encoding: .utf8)
         let prefixedString = prefixLines(resultString!, taskName)
         log("script output:\n\(prefixedString)")
+
+        executionLocks[taskName] = false
     }
 
     static func prefixLines(_ str: String, _ prefix: String) -> String {
