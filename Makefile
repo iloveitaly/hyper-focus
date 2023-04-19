@@ -10,6 +10,9 @@ build-release:
 github-release:
 	bin/release
 
+github-rerelease:
+	bin/rerelease
+
 local-release: build-release
 	bin/local-release
 

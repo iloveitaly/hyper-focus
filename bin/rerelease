@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+cd "${0%/*}/.."
+
+# delete last tag remotely and locally
+# useful when trying to get gh action releases to work
+TAG=$(git describe --tags --abbrev=0)
+git tag -d "${TAG}"
+git push --delete origin "${TAG}"
+
+bin/release

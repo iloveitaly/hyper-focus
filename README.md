@@ -168,7 +168,6 @@ You can hit the API locally for testing using: `http localhost:9029/status`
 - Run the binary manually `swift run`
 - Copy local config `cp ./config.json ~/.config/focus/config.json`
 - Generate a new release `git tag v0.1.3 && git push --tags origin HEAD`
-- Delete last tag remotely and locally `TAG=$(git describe --tags --abbrev=0); git tag -d $TAG; git push --delete origin $TAG`
 
 ## Tests
 
