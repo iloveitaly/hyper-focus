@@ -46,6 +46,7 @@ jobs:
           skip-commit: "true"
           skip-tag: "true"
           skip-version-file: "true"
+          skip-git-pull: "true"
 
       # TODO
       - name: Release
