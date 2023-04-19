@@ -11,8 +11,7 @@ enum ActionHandler {
         log("handling action: \(data)")
 
         if appAction(data) { return }
-
-        browserAction(data)
+        if browserAction(data) { return }
     }
 
     static func extractHost(_ url: String) -> String? {
@@ -77,7 +76,7 @@ enum ActionHandler {
         let optionalSubsetUrl = URLComponents(string: subsetUrlString)
 
         guard let supersetUrl = optionalSupersetUrl, let subsetUrl = optionalSubsetUrl else {
-            error("invalid url (\(supersetUrlString)), skipping \(optionalSupersetUrl) \(optionalSubsetUrl)")
+            error("invalid url (\(supersetUrlString)), skipping \(String(describing: optionalSupersetUrl)) \(String(describing: optionalSubsetUrl))")
             return false
         }
 
