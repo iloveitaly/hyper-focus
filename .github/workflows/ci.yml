@@ -37,9 +37,19 @@ jobs:
       - name: Zip Release Binary
         run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
 
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          # github-token: ${{ secrets.github_token }}
+          # output-file: "false"
+          skip-commit: "true"
+          skip-tag: "true"
+          skip-version-file: "true"
+
+      # TODO
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
-          # TODO this isn't working for me https://github.com/softprops/action-gh-release/issues/191
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.changelog }}
