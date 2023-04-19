@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "${0%/*}/.."
+cd "${0%/*}/.." || exit
 
 version=$(git tag --list | tail -n 1)
 
@@ -9,8 +9,20 @@ new_version=$(echo "$version" | sed "s/\.[^.]*$/.$next_num/")
 
 echo "New Version: $new_version"
 
+# replace the version string in CLI definition; there is no (reasonable) way to pass build vars in Swift!
 file_with_version=Sources/hyper-focus/command.swift
 sed -i "" "s/$version/$new_version/" $file_with_version
 git commit -m "Bump version to $new_version" $file_with_version
 
 git tag $new_version
+git push --tags origin HEAD
+
+# TODO need to wait for gh actions
+sleep 5
+# trunk-ignore(shellcheck/SC2312)
+run_number=$(gh run list --json status,databaseId | jq -r 'map(select(.status != "completed"))[0].databaseId')
+gh run watch "${run_number}" --exit-status
+
+# trunk-ignore(shellcheck/SC2312)
+pushd "$(brew tap-info iloveitaly/tap --json | jq -r '.[0].path')" || exit
+brew bump-formula-pr hyper-focus --version "${new_version}"

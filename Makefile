@@ -1,15 +1,14 @@
 SHELL := zsh
-.PHONY: build build-release release local-release clean
+.PHONY: build build-release github-release local-release clean
 
 build:
 	swift build -v
 
 build-release:
-	swift build -v -c release --arch arm64 --arch x86_64
+	swift build -v -c release --arch arm64 --arch x86_64 --disable-sandbox
 
-release: build-release
+github-release:
 	bin/release
-	git push --tags origin HEAD
 
 local-release: build-release
 	bin/local-release

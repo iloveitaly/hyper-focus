@@ -10,10 +10,7 @@ current_location=$(readlink -f $(which hyper-focus))
 new_build_location=.build/apple/Products/Release/hyper-focus
 
 sudo cp $new_build_location $current_location
-sudo brew services start hyper-focus -v -d
+# sudo brew services start hyper-focus -v -d
 
 # TODO remove logs?
-
-sleep 10
-
-tail -n 10000 $(brew --prefix)/var/log/hyper_focus.log
+# tail -n 10000 $(brew --prefix)/var/log/hyper_focus.log
