@@ -1,5 +1,7 @@
 # Hyper Focus
 
+![Logo](icon.png)
+
 Hyper Focus is a command line tool that watches what you are doing on your computer and prevents you from doing distracting things.
 
 It allows you define what "distracting things" are for you. For example, you might want to prevent yourself from using social media between 9am and 5pm. Or making certain google searches. Or using specific macOS applications. You can define what activities are distracting on a schedule.
@@ -153,16 +155,20 @@ Having a first wake script allows you to tie into something like [clean browsers
 
 Instead of UI, I've opted to a simple HTTP API that can be used to power a [Raycast](https://www.raycast.com/iloveitaly/hyper-focus)-based UI.
 
+- `/reload` reload the configuration file
 - `/pause` pause the currently running schedule
 - `/override` force a blocking profile to run for a period of time
 - `/ping` is this thing on?
 - `/configurations` array of names of all blocking profiles. To change the order of the results, change the order of the inputs in your config file.
+
+You can hit the API locally for testing using: `http localhost:9029/status`
 
 ## Development
 
 - Run the binary manually `swift run`
 - Copy local config `cp ./config.json ~/.config/focus/config.json`
 - Generate a new release `git tag v0.1.3 && git push --tags origin HEAD`
+- Delete last tag remotely and locally `TAG=$(git describe --tags --abbrev=0); git tag -d $TAG; git push --delete origin $TAG`
 
 ## Tests
 
