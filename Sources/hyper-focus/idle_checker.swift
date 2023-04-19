@@ -34,6 +34,8 @@ class IdleChecker {
 
         let timeSinceLastActivity = systemIdleTime()
 
+        // TODO: support sleeping in the same day
+
         let now = Date()
         let lastActivity = now.addingTimeInterval(-timeSinceLastActivity)
         let isInDifferentDay = !Calendar.current.isDate(lastActivity, inSameDayAs: now)
