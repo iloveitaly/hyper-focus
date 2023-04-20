@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Schema for Hyper Focus configuration",
+
   "type": "object",
   "properties": {
     "initial_wake": {
@@ -23,6 +24,9 @@
           "name": {
             "type": "string"
           },
+          "schedule_only": {
+            "type": "boolean"
+          },
           "block_hosts": {
             "type": "array",
             "items": {
@@ -40,11 +44,17 @@
             "items": {
               "type": "string"
             }
+          },
+          "start_script": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         },
-        "required": []
+        "required": ["name", "block_hosts", "block_urls", "block_apps"]
       }
     }
   },
-  "required": ["schedule"]
+  "required": ["$schema", "schedule"]
 }

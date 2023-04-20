@@ -24,6 +24,8 @@ struct Configuration: Codable {
         var start: Int?
         var end: Int?
         var name: String?
+        var description: String?
+        var schedule_only: Bool?
         var start_script: String?
         var block_hosts: [String]
         var block_urls: [String]
