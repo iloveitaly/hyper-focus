@@ -48,7 +48,8 @@ class SleepWatcher {
         let isFirstWakeInAwhile = idleChecker.getAndClearWasEffectivelySleeping()
 
         if isFirstWakeInAwhile {
-            log("computer was effectively sleeping")
+            log("computer was effectively sleeping, triggering wake scripts")
+            lastWakeTime = dateGenerator()
             runInitialWakeScript()
             runWakeScript()
         }

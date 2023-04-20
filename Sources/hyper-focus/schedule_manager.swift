@@ -17,8 +17,8 @@ class ScheduleManager {
         block_apps: []
     )
 
-    init() {
-        configuration = ConfigurationLoader.loadConfiguration()
+    init(_ config: Configuration? = nil) {
+        configuration = config ?? ConfigurationLoader.loadConfiguration()
 
         // setup timer to check if we need to change the schedule
         Timer.scheduledTimer(
@@ -46,15 +46,15 @@ class ScheduleManager {
         endPause = end
     }
 
-    func namedSchedules() -> [Configuration.ScheduleItem] {
-        return configuration.schedule.filter { $0.name != nil }
+    func schedules() -> [Configuration.ScheduleItem] {
+        return configuration.schedule
     }
 
     func scheduleOverride(name: String, end: Date) {
         log("schedule override \(name) until \(end)")
 
         // find a schedule with a name that matches the `name` parameter
-        let schedule = namedSchedules().first { $0.name == name }
+        let schedule = schedules().first { $0.name != nil && $0.name == name }
 
         if let schedule = schedule {
             endOverride = end
@@ -80,8 +80,10 @@ class ScheduleManager {
         }
 
         let calendar = Calendar.current
+        // TODO(GPT) this may need to be adjusted to support minute specification
         let hour = calendar.component(.hour, from: now)
 
+        // TODO(GPT) support schedules optionally specifying the start and end minute as well
         // select all schedules where the hour is greater than the start time
         let schedules = configuration.schedule.filter {
             $0.start != nil && $0.end != nil &&
