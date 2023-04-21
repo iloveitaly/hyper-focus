@@ -37,20 +37,21 @@ jobs:
       - name: Zip Release Binary
         run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
 
-      - name: Conventional Changelog Action
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          github-token: ${{ secrets.github_token }}
-          # output-file: "false"
-          skip-commit: "true"
-          skip-tag: "true"
-          skip-version-file: "true"
-          skip-git-pull: "true"
+      # - name: Conventional Changelog Action
+      #   id: changelog
+      #   uses: TriPSs/conventional-changelog-action@v3
+      #   with:
+      #     github-token: ${{ secrets.github_token }}
+      #     # output-file: "false"
+      #     skip-commit: "true"
+      #     skip-tag: "true"
+      #     skip-version-file: "true"
+      #     skip-git-pull: "true"
 
       # TODO
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
-          body: ${{ steps.changelog.outputs.changelog }}
+          # body: ${{ steps.changelog.outputs.changelog }}
+          generate_release_notes: true
