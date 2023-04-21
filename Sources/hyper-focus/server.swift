@@ -43,12 +43,11 @@ class ApiServer {
                     scheduledUntil = Int(nowWithStartAndEnd.timeIntervalSince1970)
                 }
 
-
                 return [
                     "schedule": [
                         "name": self.scheduleManager.plannedSchedule?.name,
                         "until": scheduledUntil,
-                    ] as [String : Any?],
+                    ] as [String: Any?],
                     "override": [
                         "until": self.scheduleManager.endOverride?.timeIntervalSince1970,
                         "name": self.scheduleManager.overrideSchedule?.name,
@@ -69,7 +68,7 @@ class ApiServer {
             router["/schedules"] = JSONResponse { _ -> Any in
                 let rawSchedules = self.scheduleManager.schedules()
 
-                // TODO there's got to be a better way to convert a codable object to JSON
+                // TODO: there's got to be a better way to convert a codable object to JSON
                 let schedules: [[String: Any]] = rawSchedules.map { schedule in
                     let jsonData = try! JSONEncoder().encode(schedule)
                     let json = try! JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
@@ -78,7 +77,6 @@ class ApiServer {
 
                 return schedules
             }
-
 
             // http -vvv POST http://localhost:8080/override name='hyper focus' until=1667514400
             router["/override"] = JSONResponse { environ -> Any in

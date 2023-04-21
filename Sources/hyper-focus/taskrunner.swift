@@ -1,6 +1,11 @@
 import Cocoa
 import Foundation
 
+/**
+ This module runs shell commands. It ensures single-instance execution per task name and handles script execution timeouts.
+ Output is prefixed with task-specific identifier for easier identification in the logs.
+ */
+
 enum TaskRunner {
     static var executionLocks: [String: Bool] = [:]
 
