@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 1.8.0
+  version: 1.8.1
 plugins:
   sources:
     - id: trunk
@@ -15,7 +15,7 @@ lint:
     - prettier@2.8.7
     - actionlint@1.6.24
     - markdownlint@0.33.0
-    - gitleaks@8.16.2
+    - gitleaks@8.16.3
     - git-diff-check
   ignore:
     - linters: [swiftlint]
