@@ -45,6 +45,24 @@
               "type": "string"
             }
           },
+          "allow_hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allow_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "allow_apps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "start_script": {
             "type": "string"
           },
@@ -52,7 +70,7 @@
             "type": "string"
           }
         },
-        "required": ["name", "block_hosts", "block_urls", "block_apps"]
+        "required": ["name", "block_hosts", "block_urls", "block_apps", "allow_hosts", "allow_urls", "allow_apps"]
       }
     }
   },
