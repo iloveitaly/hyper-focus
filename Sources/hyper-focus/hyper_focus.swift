@@ -30,6 +30,9 @@ struct Configuration: Codable {
         var block_hosts: [String]
         var block_urls: [String]
         var block_apps: [String]
+        var allow_hosts: [String]
+        var allow_urls: [String]
+        var allow_apps: [String]
     }
 
     var initial_wake: String?
