@@ -14,7 +14,10 @@ class ScheduleManager {
     let BLANK_SCHEDULE = Configuration.ScheduleItem(
         block_hosts: [],
         block_urls: [],
-        block_apps: []
+        block_apps: [],
+        allow_hosts: [],
+        allow_urls: [],
+        allow_apps: []
     )
 
     init(_ config: Configuration? = nil) {

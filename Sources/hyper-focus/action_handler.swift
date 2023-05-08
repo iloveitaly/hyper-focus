@@ -20,10 +20,16 @@ enum ActionHandler {
     }
 
     static func appAction(_ data: SwitchingActivity) -> Bool {
-        if data.configuration.block_apps.contains(data.app) {
+        if match(data.app, data.configuration.block_apps) {
+            if match(data.app, data.configuration.allow_apps) {
+                log("app is in allow_apps, releasing")
+                return false
+            }
             log("app is in block_apps, hiding application to prevent usage")
             // TODO: sometimes this hide method does not work
-            NSWorkspace.shared.frontmostApplication!.hide()
+            //NSWorkspace.shared.frontmostApplication!.hide()
+            NSWorkspace.shared.frontmostApplication!.terminate()
+            
             return true
         }
 
@@ -44,8 +50,10 @@ enum ActionHandler {
         // add 'www.' to all block_hosts entries, this is not something users want to do manually
         let blockHosts = data.configuration.block_hosts
         let blockHostsWithWWW = blockHosts.map { "www.\($0)" }
+        let allowHosts = data.configuration.allow_hosts
+        let allowHostsWithWWW = allowHosts.map { "www.\($0)" }
 
-        if blockHosts.contains(host) || blockHostsWithWWW.contains(host) {
+        if match(host, blockHosts + blockHostsWithWWW) && !match(host, allowHosts + allowHostsWithWWW) {
             error("blocked host, redirecting browser to block page")
             blockTab(data.activeTab)
             return true
@@ -53,14 +61,32 @@ enum ActionHandler {
 
         debug("checking urls for any blocked matches")
 
+        let blockUrls = data.configuration.block_urls
+        let allowUrls = data.configuration.allow_urls
         // the urls in the config are expected to have less params, so they are considered the subset
-        if data.configuration.block_urls.count > 0, data.configuration.block_urls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) {
+        if blockUrls.count > 0 && blockUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) && !(allowUrls.count > 0 && allowUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) })) {
             error("blocked url, redirecting browser to block page")
             blockTab(data.activeTab)
             return true
         }
 
         return false
+    }
+    
+    static func match(_ str: String, _ regexpArray: [String]) -> Bool {
+        if regexpArray.count == 0 {
+            return false
+        }
+        if let matchedPattern = regexpArray.first(where: { pattern in
+            let regex = try! NSRegularExpression(pattern: pattern)
+            return regex.firstMatch(in: str, range: NSRange(location: 0, length: str.utf16.count)) != nil
+        }) {
+            debug("String \(str) matched pattern: \(matchedPattern)")
+            return true
+        } else {
+            debug("String \(str) did not match any pattern")
+            return false
+        }
     }
 
     static func isSubsetOfUrl(supersetUrlString: String, subsetUrlString: String) -> Bool {
