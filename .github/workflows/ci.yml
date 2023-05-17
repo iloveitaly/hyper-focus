@@ -1,15 +1,17 @@
 name: Build & Release
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - Sources/**/*
-      - Package.*
-    # TODO previously would manually tag,
-    # tags:
-    #   - v* # Push events to matching v*, i.e. v1.0, v20.15.10
+on: push
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - Sources/**/*
+#       - Package.*
+
+#     # TODO previously would manually tag,
+#     # tags:
+#     #   - v* # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
