@@ -41,7 +41,7 @@ class IdleChecker {
         let isInDifferentDay = !Calendar.current.isDate(lastActivity, inSameDayAs: now)
 
         if timeSinceLastActivity > intervalToConsiderSleeping, isInDifferentDay {
-            log("is effectively sleeping")
+            log("is effectively sleeping \(timeSinceLastActivity), last activity \(lastActivity))")
             wasEffectivelySleeping = true
         }
     }
