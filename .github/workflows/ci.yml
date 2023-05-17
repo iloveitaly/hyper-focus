@@ -37,12 +37,6 @@ jobs:
       - name: Test
         run: swift test -vv
 
-      - name: Build Release Binary
-        run: swift build -v -c release --arch arm64 --arch x86_64
-
-      - name: Zip Release Binary
-        run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
-
       - name: conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
@@ -50,7 +44,12 @@ jobs:
           github-token: ${{ secrets.github_token}}
           skip-version-file: "true"
 
-      # TODO
+      - name: Build Release Binary
+        run: swift build -v -c release --arch arm64 --arch x86_64
+
+      - name: Zip Release Binary
+        run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
