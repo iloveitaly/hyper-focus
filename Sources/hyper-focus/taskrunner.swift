@@ -9,6 +9,9 @@ import Foundation
 enum TaskRunner {
     static var executionLocks: [String: Bool] = [:]
 
+    // why so long? One could have a task which has a long user input timeout
+    static let taskTimeout = 60.0 * 10.0
+
     static func executeTaskWithName(_ rawCommandPath: String, _ taskName: String) {
         let expandedCommandPath = NSString(string: rawCommandPath).expandingTildeInPath
 
@@ -30,7 +33,6 @@ enum TaskRunner {
 
         let process = Process()
         let pipe = Pipe()
-        let timeout = 120.0
 
         process.standardInput = FileHandle.nullDevice
         process.standardOutput = pipe
@@ -45,9 +47,9 @@ enum TaskRunner {
         }
 
         let timer: DispatchSourceTimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
-        timer.schedule(deadline: .now() + timeout)
+        timer.schedule(deadline: .now() + taskTimeout)
         timer.setEventHandler {
-            error("\(timeout) second timeout reached, killing script \(expandedCommandPath)")
+            error("\(taskTimeout) second timeout reached, killing script \(expandedCommandPath)")
             process.terminate()
         }
         timer.resume()
