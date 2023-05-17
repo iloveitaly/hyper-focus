@@ -4,7 +4,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.16
+      ref: v0.0.17
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
@@ -31,9 +31,8 @@ runtimes:
     - go@1.19.5
     - node@18.12.1
 actions:
-  disabled:
-    - trunk-fmt-pre-commit
   enabled:
+    - trunk-fmt-pre-commit
     - trunk-announce
     - trunk-check-pre-push
     - trunk-upgrade-available
