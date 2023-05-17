@@ -2,10 +2,14 @@ name: Build & Release
 
 on:
   push:
-    # branches: [main]
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - v* # Push events to matching v*, i.e. v1.0, v20.15.10
+    branches:
+      - main
+    paths:
+      - Sources/**/*
+      - Package.*
+    # TODO previously would manually tag,
+    # tags:
+    #   - v* # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -37,21 +41,17 @@ jobs:
       - name: Zip Release Binary
         run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
 
-      # - name: Conventional Changelog Action
-      #   id: changelog
-      #   uses: TriPSs/conventional-changelog-action@v3
-      #   with:
-      #     github-token: ${{ secrets.github_token }}
-      #     # output-file: "false"
-      #     skip-commit: "true"
-      #     skip-tag: "true"
-      #     skip-version-file: "true"
-      #     skip-git-pull: "true"
+      - name: conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.github_token}}
+          skip-version-file: "true"
 
       # TODO
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
-          # body: ${{ steps.changelog.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
           generate_release_notes: true
