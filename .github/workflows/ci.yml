@@ -54,5 +54,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
+          # output options: https://github.com/TriPSs/conventional-changelog-action#outputs
           body: ${{ steps.changelog.outputs.clean_changelog }}
-          generate_release_notes: true
+          tag_name: ${{ steps.changelog.outputs.tag }}
