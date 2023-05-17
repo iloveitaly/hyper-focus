@@ -23,8 +23,7 @@ lint:
       paths:
         - Sources/hyper-focus/Google Chrome.swift
         - Sources/hyper-focus/Safari.swift
-    - linters: [markdownlint]
-      paths:
+    - paths:
         - CHANGELOG.md
   disabled:
     - swiftlint@0.50.3
