@@ -44,15 +44,25 @@ jobs:
           skip-version-file: "true"
 
       - name: Build Release Binary
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: swift build -v -c release --arch arm64 --arch x86_64
 
       - name: Zip Release Binary
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: zip -rj hyper-focus.zip .build/apple/Products/Release/hyper-focus
 
       - name: Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: softprops/action-gh-release@v1
         with:
           files: hyper-focus.zip
           # output options: https://github.com/TriPSs/conventional-changelog-action#outputs
           body: ${{ steps.changelog.outputs.clean_changelog }}
           tag_name: ${{ steps.changelog.outputs.tag }}
+
+      - name: Update Homebrew formula
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        with:
+          token: ${{secrets.github_token}}
+          tap: iloveitaly/homebrew-tap
+          livecheck: true
