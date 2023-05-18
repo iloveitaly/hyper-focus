@@ -39,7 +39,7 @@ jobs:
 
       - name: conventional Changelog Action
         id: changelog
-        uses: iloveitaly/conventional-changelog-action@sync-git-config
+        uses: iloveitaly/conventional-changelog-action@1607ac70d5942487fb67e1d412d57868d8decca9
         with:
           github-token: ${{ secrets.github_token}}
           skip-version-file: "true"
