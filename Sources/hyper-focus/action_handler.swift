@@ -27,9 +27,7 @@ enum ActionHandler {
             }
             log("app is in block_apps, hiding application to prevent usage")
             // TODO: sometimes this hide method does not work
-            //NSWorkspace.shared.frontmostApplication!.hide()
-            NSWorkspace.shared.frontmostApplication!.terminate()
-            
+            NSWorkspace.shared.frontmostApplication!.hide()
             return true
         }
 
