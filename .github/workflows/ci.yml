@@ -63,6 +63,6 @@ jobs:
       - name: Update Homebrew formula
         uses: dawidd6/action-homebrew-bump-formula@v3
         with:
-          token: ${{secrets.github_token}}
+          token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
           tap: iloveitaly/homebrew-tap
           livecheck: true
