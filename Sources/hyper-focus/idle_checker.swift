@@ -23,8 +23,12 @@ class IdleChecker {
     }
 
     private func systemIdleTime() -> TimeInterval {
-        let idleTimeInMilliseconds = CGEventSource.secondsSinceLastEventType(CGEventSourceStateID.hidSystemState, eventType: .null) * 1000
-        return idleTimeInMilliseconds / 1000
+        // the "anyInputEventType" is NOT defined in swift!
+        // https://stackoverflow.com/questions/31943951/swift-and-my-idle-timer-implementation-missing-cgeventtype
+        let anyInputEventType = CGEventType(rawValue: ~0)!
+
+        let idleTimeInMilliseconds = CGEventSource.secondsSinceLastEventType(CGEventSourceStateID.combinedSessionState, eventType: anyInputEventType)
+        return idleTimeInMilliseconds
     }
 
     private func checkActivity() {
@@ -41,7 +45,7 @@ class IdleChecker {
         let isInDifferentDay = !Calendar.current.isDate(lastActivity, inSameDayAs: now)
 
         if timeSinceLastActivity > intervalToConsiderSleeping, isInDifferentDay {
-            log("is effectively sleeping \(timeSinceLastActivity), last activity \(lastActivity))")
+            log("is effectively sleeping, time since last activity \(timeSinceLastActivity), last activity \(lastActivity))")
             wasEffectivelySleeping = true
         }
     }
