@@ -43,7 +43,6 @@ jobs:
         with:
           github-token: ${{ secrets.github_token}}
           skip-version-file: "true"
-          skip-git-pull: "true"
 
       - name: Build Release Binary
         run: swift build -v -c release --arch arm64 --arch x86_64
