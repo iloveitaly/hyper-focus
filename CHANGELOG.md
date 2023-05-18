@@ -1,18 +1,10 @@
-# [0.2.0](https://github.com/iloveitaly/hyper-focus/compare/v0.1.0...v0.2.0) (2023-05-17)
-
-
-### Features
-
-* increase task timeout to 10m ([ef2e175](https://github.com/iloveitaly/hyper-focus/commit/ef2e175b0cbe3f0976d5d415e7f975f3bcdc5e7f))
-
-
-
-# [0.1.0](https://github.com/iloveitaly/hyper-focus/compare/v0.1.10...v0.1.0) (2023-04-21)
+# [0.2.0](https://github.com/iloveitaly/hyper-focus/compare/v0.1.10...v0.2.0) (2023-05-18)
 
 
 ### Features
 
 * adding description and schedule_only flags to config ([b8061f6](https://github.com/iloveitaly/hyper-focus/commit/b8061f6b291352787d04c3aef99f2cfd759037ba))
+* increase task timeout to 10m ([ef2e175](https://github.com/iloveitaly/hyper-focus/commit/ef2e175b0cbe3f0976d5d415e7f975f3bcdc5e7f))
 * return all schedule data ([a3eb3ee](https://github.com/iloveitaly/hyper-focus/commit/a3eb3ee257c31c824e79cf6d5af891547c7fe67c))
 
 
@@ -50,6 +42,20 @@
 * custom formatting for switching activity ([a7a1797](https://github.com/iloveitaly/hyper-focus/commit/a7a17971c04d45a37a41d2b2c6ec11499727d8f5))
 * flush stdout on each log, respect non-info log levels ([6fe221a](https://github.com/iloveitaly/hyper-focus/commit/6fe221a9354c9bf82b7baa24dfb7b43226d03914))
 * handle first wake even if there is no previous wake ([26650b8](https://github.com/iloveitaly/hyper-focus/commit/26650b82d0a3c7bade22da5ced62f018ee94a243))
+
+
+
+## [0.1.7](https://github.com/iloveitaly/hyper-focus/compare/v0.1.6...v0.1.7) (2023-02-07)
+
+
+### Bug Fixes
+
+* add log when accessibility permissions do not exist ([3e15c6f](https://github.com/iloveitaly/hyper-focus/commit/3e15c6fb822f56b8dd2887695cdf8a0aaa7590c9))
+
+
+### Features
+
+* **sleepwatcher:** run command directly if it is executable ([73f2681](https://github.com/iloveitaly/hyper-focus/commit/73f26817d547762ac6c8cf1ad15dd7e61e55708e))
 
 
 
