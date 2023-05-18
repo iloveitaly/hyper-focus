@@ -25,6 +25,7 @@ class IdleChecker {
     private func systemIdleTime() -> TimeInterval {
         // the "anyInputEventType" is NOT defined in swift!
         // https://stackoverflow.com/questions/31943951/swift-and-my-idle-timer-implementation-missing-cgeventtype
+        // https://developer.apple.com/documentation/coregraphics/cgeventsource/1408790-secondssincelasteventtype
         let anyInputEventType = CGEventType(rawValue: ~0)!
 
         let idleTimeInMilliseconds = CGEventSource.secondsSinceLastEventType(CGEventSourceStateID.combinedSessionState, eventType: anyInputEventType)
