@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/iloveitaly/hyper-focus/compare/v0.2.1...v0.3.0) (2023-05-19)
+
+
+### Features
+
+* support json5 config format ([7add980](https://github.com/iloveitaly/hyper-focus/commit/7add980bce18915b7c576203e11e1928f3921f29))
+
+
+
 ## [0.2.1](https://github.com/iloveitaly/hyper-focus/compare/v0.2.0...v0.2.1) (2023-05-18)
 
 
@@ -40,17 +49,6 @@
 * lock execution types ([e26b94d](https://github.com/iloveitaly/hyper-focus/commit/e26b94d986b2b09413b3f39a9193f94de8b4d6c4))
 * support reloading configuration in memory ([0b2d409](https://github.com/iloveitaly/hyper-focus/commit/0b2d409cac11988a490811cabd96a52274fe261e))
 * watch for login events and treat them as sleep wakes if a long time has passed and they cross a day boundary ([7085d9a](https://github.com/iloveitaly/hyper-focus/commit/7085d9a94ec167e2fb265d9abf2566bdd5719a20))
-
-
-
-## [0.1.8](https://github.com/iloveitaly/hyper-focus/compare/v0.1.7...v0.1.8) (2023-02-22)
-
-
-### Bug Fixes
-
-* custom formatting for switching activity ([a7a1797](https://github.com/iloveitaly/hyper-focus/commit/a7a17971c04d45a37a41d2b2c6ec11499727d8f5))
-* flush stdout on each log, respect non-info log levels ([6fe221a](https://github.com/iloveitaly/hyper-focus/commit/6fe221a9354c9bf82b7baa24dfb7b43226d03914))
-* handle first wake even if there is no previous wake ([26650b8](https://github.com/iloveitaly/hyper-focus/commit/26650b82d0a3c7bade22da5ced62f018ee94a243))
 
 
 
