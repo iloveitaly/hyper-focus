@@ -21,7 +21,13 @@ enum ConfigurationLoader {
         debug("Loading configuration from \(configPath!.absoluteString)")
 
         let configData = try! Data(contentsOf: configPath!)
-        let config = try! JSONDecoder().decode(Configuration.self, from: configData)
+
+        // neat! Apple supports JSON5, which allows for comments
+        // https://developer.apple.com/documentation/foundation/jsondecoder/3766916-allowsjson5
+        let decoder = JSONDecoder()
+        decoder.allowsJSON5 = true
+
+        let config = try! decoder.decode(Configuration.self, from: configData)
 
         return config
     }
