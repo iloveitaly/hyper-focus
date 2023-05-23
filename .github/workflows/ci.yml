@@ -38,7 +38,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: iloveitaly/conventional-changelog-action@1607ac70d5942487fb67e1d412d57868d8decca9
+        uses: iloveitaly/conventional-changelog-action@bbae9470dbd4e1126eb56ae8afe9c5053b5b746f
         with:
           github-token: ${{ secrets.github_token}}
           skip-version-file: "true"
