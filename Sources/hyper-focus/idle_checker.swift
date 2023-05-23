@@ -7,8 +7,7 @@ class IdleChecker {
 
     var wasEffectivelySleeping: Bool
 
-    // TODO: bad variable name!
-    private var timer: Timer?
+    private var idleWatchTimer: Timer?
 
     init() {
         log("idle checker initialized")
@@ -17,7 +16,7 @@ class IdleChecker {
     }
 
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: idleCheckInterval, repeats: true) { [weak self] _ in
+        idleWatchTimer = Timer.scheduledTimer(withTimeInterval: idleCheckInterval, repeats: true) { [weak self] _ in
             self?.checkActivity()
         }
     }
@@ -38,8 +37,6 @@ class IdleChecker {
         }
 
         let timeSinceLastActivity = systemIdleTime()
-
-        // TODO: support sleeping in the same day
 
         let now = Date()
         let lastActivity = now.addingTimeInterval(-timeSinceLastActivity)
