@@ -1,23 +1,16 @@
 ## Next
 
-- [ ] json schema update
-- [ ] allow minute granularity for schedule start/end
-  - [ ] setup noon-12:30 schedule; setup 5-5:30 schedule
-- [ ] do we need `sudo xattr -r -d com.apple.quarantine`?
 - [ ] swiftformat needs to be updated to play well with swiftlint
 - [ ] Would be cool to have a regex match option, not sure how this would fit into the config schema
-- [ ] custom redirect page for browsers when blocked, could be a fun way to redirect to quotes or something
+- [ ] custom redirect page for browsers, could be a fun way to redirect to quotes or something
+- [ ] reload configuration endpoint
 - [ ] YouTube video about how it works
-- [ ] merge the scripting bridge stuff upstream https://github.com/tingraldi/SwiftScripting/pull/24#pullrequestreview-1173211472
-- [ ] Looks like we can sign command line tools https://developer.apple.com/forums/thread/680212
+- [ ] Schedule start script in addition to wake script
+- [ ] https://github.com/tingraldi/SwiftScripting/pull/24#pullrequestreview-1173211472
+
 ## Future
 
+- [ ] support json config with comments
 - [ ] I wonder if there is a tool out there to generate a ui based off a json schema?
+- [ ] make a logo with AI? https://www.shopify.com/tools/logo-maker/onboarding/brand-values
 - [ ] If there are no events in a certain period of time, we should trigger an action anyway
-- [ ] trunk notes: `trunk exec swiftformat -- <arguments>, You can also find the installed binary in ~/.cache/trunk/tools`
-
-## Accessibility
-
-* `sudo hyper-focus` in a terminal has different properties from a sys accessbility perspective
-* maybe the symlink stuff has something to do with it? hyper-focus path is symlinked by homebrew
-* maybe it's just a system restart because the binary was replaced?
