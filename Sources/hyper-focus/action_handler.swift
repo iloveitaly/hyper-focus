@@ -62,20 +62,29 @@ enum ActionHandler {
         return false
     }
     
-    static func match(_ str: String, _ regexpArray: [String]) -> Bool {
-        if regexpArray.count == 0 {
+    static func match(_ str: String, _ patternArray: [String]) -> Bool {
+        if patternArray.count == 0 {
             return false
         }
-        if let matchedPattern = regexpArray.first(where: { pattern in
+
+        // split array into regexps and non-regexps
+        // regex strings should start with `//`, so then strip it from the beginning of each string
+        let nonRegexArray: [String] = patternArray.filter { !$0.starts(with: "//") }
+        let regexArray: [String] = patternArray.filter{ $0.starts(with: "//")}.map{String($0.dropFirst(2))}
+        
+        if nonRegexArray.contains(str) {
+            debug("String \(str) matched non-regexp")
+            return true
+        }
+        if let matchedPattern = regexArray.first(where: { pattern in
             let regex = try! NSRegularExpression(pattern: pattern)
             return regex.firstMatch(in: str, range: NSRange(location: 0, length: str.utf16.count)) != nil
         }) {
             debug("String \(str) matched pattern: \(matchedPattern)")
             return true
-        } else {
-            debug("String \(str) did not match any pattern")
-            return false
         }
+
+        return false
     }
 
     static func isSubsetOfUrl(supersetUrlString: String, subsetUrlString: String) -> Bool {
