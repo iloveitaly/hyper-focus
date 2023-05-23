@@ -45,25 +45,36 @@ enum ActionHandler {
             return false
         }
 
-        // add 'www.' to all block_hosts entries, this is not something users want to do manually
-        let blockHosts = data.configuration.block_hosts
-        let blockHostsWithWWW = blockHosts.map { "www.\($0)" }
-        let allowHosts = data.configuration.allow_hosts
-        let allowHostsWithWWW = allowHosts.map { "www.\($0)" }
-
-        if match(host, blockHosts + blockHostsWithWWW) && !match(host, allowHosts + allowHostsWithWWW) {
-            error("blocked host, redirecting browser to block page")
+        // note: allow always has precedence over block, and url has precedence over host
+        // possible "conflicting" configurations:
+        // {host}               {url}               {action}
+        // block                none | block        block
+        // none | allow         block               block
+        // block                allow               allow
+        // => release_condition = allow_url || allow_host && !block_url || !block_host && !block_url
+        // thus if url matches allow_url we can automatically release, and if it doesn't but it matches block_url we can block
+        // if it matches neither, we can continue to the host check
+        
+        debug("checking urls for any blocked matches")
+        let blockUrls = data.configuration.block_urls
+        let allowUrls = data.configuration.allow_urls
+        // note: the url takes precedence over the host, and the allow takes precedence over the block,
+        // so if url matches allow_url we can automatically release
+        // the urls in the config are expected to have less params, so they are considered the subset (no regex here)
+        if allowUrls.count > 0 && allowUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) {
+            error("url is in allow_urls, releasing")
+            return false
+        } else if blockUrls.count > 0 && blockUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) {
+            error("blocked url, redirecting browser to block page")
             blockTab(data.activeTab)
             return true
         }
 
-        debug("checking urls for any blocked matches")
-
-        let blockUrls = data.configuration.block_urls
-        let allowUrls = data.configuration.allow_urls
-        // the urls in the config are expected to have less params, so they are considered the subset
-        if blockUrls.count > 0 && blockUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) }) && !(allowUrls.count > 0 && allowUrls.contains(where: { isSubsetOfUrl(supersetUrlString: url, subsetUrlString: $0) })) {
-            error("blocked url, redirecting browser to block page")
+        debug("checking hosts for any blocked matches")
+        let blockHosts = data.configuration.block_hosts
+        let allowHosts = data.configuration.allow_hosts
+        if match(host, blockHosts) && !match(host, allowHosts) {
+            error("blocked host, redirecting browser to block page")
             blockTab(data.activeTab)
             return true
         }
