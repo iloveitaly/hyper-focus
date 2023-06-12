@@ -8,6 +8,8 @@ It allows you define what "distracting things" are for you. For example, you mig
 
 In other words, if you are obsessive about personal productivity you can define what you want a productive day to look like and then use Hyper Focus to enforce it.
 
+This is my first/only project in Swift, so feel to submit PRs to fix obvious things that should be better. [Here's what I learned while building this project.](http://mikebian.co/learning-swift-development-for-macos-by-building-a-website-blocker/)
+
 ## Installation
 
 ```shell
