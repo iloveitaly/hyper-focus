@@ -12,6 +12,8 @@ on:
     # tags:
     #   - v* # Push events to matching v*, i.e. v1.0, v20.15.10
 
+permissions: read-all
+
 jobs:
   build:
     # TODO need ventura macos version https://github.com/actions/runner-images/issues/6426 to fix weird test issue

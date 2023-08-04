@@ -1,8 +1,10 @@
 # .github/notify-twitter.yml
 name: Notify twitter
 
+permissions: read-all
+
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   release:
     # publishes is fired when a release is created programmatically
     # https://stackoverflow.com/questions/59319281/github-action-different-between-release-created-and-published
