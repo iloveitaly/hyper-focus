@@ -22,7 +22,9 @@ struct SwitchingActivity: CustomStringConvertible {
 struct Configuration: Codable {
     struct ScheduleItem: Codable, Equatable {
         var start: Int?
+        var start_minute: Int?
         var end: Int?
+        var end_minute: Int?
         var name: String?
         var description: String?
         var schedule_only: Bool?

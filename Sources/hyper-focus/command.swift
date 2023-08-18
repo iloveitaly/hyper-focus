@@ -1,5 +1,6 @@
 import ArgumentParser
 
+// cli entrypoint
 @main
 struct HyperFocus: ParsableCommand {
     static let configuration = CommandConfiguration(

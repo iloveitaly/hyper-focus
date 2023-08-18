@@ -80,18 +80,21 @@ class ScheduleManager {
         }
 
         let calendar = Calendar.current
-        // TODO(GPT) this may need to be adjusted to support minute specification
         let hour = calendar.component(.hour, from: now)
+        let minute: Int = calendar.component(.minute, from: now)
 
-        // TODO(GPT) support schedules optionally specifying the start and end minute as well
-        // select all schedules where the hour is greater than the start time
         let schedules = configuration.schedule.filter {
+            // exclude schedules which do not have a start & end time set (maybe only used for manual scheduling)
             $0.start != nil && $0.end != nil &&
-                hour >= $0.start! && hour <= $0.end!
+                // select all schedules where the current hour is greater than the start time of the schedule
+                hour >= $0.start! && hour <= $0.end! &&
+                // support schedules optionally specifying the start and end minute as well
+                ($0.start_minute == nil || minute >= $0.start_minute!) &&
+                ($0.end_minute == nil || minute < $0.end_minute!)
         }
 
         if schedules.count > 1 {
-            error("More than one schedule is active, this is not supported")
+            error("more than one schedule is active, this is not supported: \(schedules)")
             return
         }
 
