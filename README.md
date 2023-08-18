@@ -29,6 +29,9 @@ hyper-focus
 
 # you may want to run as root if your scripts are modifying system files, like /etc/hosts
 sudo hyper-focus --configuration ~/.config/focus/config.json
+
+# for debugging/tinkering, it's helpful to tee the logs
+LOG_LEVEL=debug hyper-focus 2>&1 | tee hyper-focus.log
 ```
 
 When running via a brew service, the logs are located in `$(brew --prefix)/var/log/`. You can tail the logs:
