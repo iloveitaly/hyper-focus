@@ -9,8 +9,9 @@ let package = Package(
         .macOS(.v12),
     ],
     dependencies: [
+        // TODO: https://github.com/envoy/Embassy/pull/110
         .package(url: "https://github.com/envoy/Ambassador", from: "4.0.0"),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.3"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
