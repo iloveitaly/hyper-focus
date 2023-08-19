@@ -65,8 +65,8 @@ class ScheduleManager {
                 // select all schedules where the current hour is greater than the start time of the schedule
                 hour >= $0.start! && hour <= $0.end! &&
                 // support schedules optionally specifying the start and end minute as well
-                ($0.start_minute == nil || minute >= $0.start_minute!) &&
-                ($0.end_minute == nil || minute < $0.end_minute!)
+                ($0.start_minute == nil || hour != $0.start || minute >= $0.start_minute!) &&
+                ($0.end_minute == nil || hour != $0.end || minute < $0.end_minute!)
         }
 
         if schedules.count > 1 {
@@ -79,6 +79,8 @@ class ScheduleManager {
             plannedSchedule = schedule
             setSchedule(schedule)
         } else {
+            debug("no schedule is active, minute: \(minute), hour: \(hour)")
+
             // if no schedule is set, remove it
             plannedSchedule = nil
             setSchedule(nil)
