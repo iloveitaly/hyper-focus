@@ -41,30 +41,6 @@ class ScheduleManager {
         checkSchedule()
     }
 
-    func pauseBlocking(_ end: Date) {
-        log("pause blocking until \(end)")
-        endPause = end
-    }
-
-    func schedules() -> [Configuration.ScheduleItem] {
-        return configuration.schedule
-    }
-
-    func scheduleOverride(name: String, end: Date) {
-        log("schedule override \(name) until \(end)")
-
-        // find a schedule with a name that matches the `name` parameter
-        let schedule = schedules().first { $0.name != nil && $0.name == name }
-
-        if let schedule = schedule {
-            endOverride = end
-            overrideSchedule = schedule
-            setSchedule(schedule)
-        } else {
-            error("no schedule with name \(name)")
-        }
-    }
-
     func checkSchedule() {
         let now = Date()
 
@@ -103,8 +79,33 @@ class ScheduleManager {
             plannedSchedule = schedule
             setSchedule(schedule)
         } else {
+            // if no schedule is set, remove it
             plannedSchedule = nil
             setSchedule(nil)
+        }
+    }
+
+    func pauseBlocking(_ end: Date) {
+        log("pause blocking until \(end)")
+        endPause = end
+    }
+
+    func schedules() -> [Configuration.ScheduleItem] {
+        return configuration.schedule
+    }
+
+    func scheduleOverride(name: String, end: Date) {
+        log("schedule override \(name) until \(end)")
+
+        // find a schedule with a name that matches the `name` parameter
+        let schedule = schedules().first { $0.name != nil && $0.name == name }
+
+        if let schedule = schedule {
+            endOverride = end
+            overrideSchedule = schedule
+            setSchedule(schedule)
+        } else {
+            error("no schedule with name \(name)")
         }
     }
 

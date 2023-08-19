@@ -20,6 +20,7 @@ class ApiServer {
             let server = DefaultHTTPServer(eventLoop: loop, port: serverPort, app: router.app)
 
             // https://github.com/envoy/Ambassador/blob/master/Ambassador/Responses/JSONResponse.swift
+            // all API endpoints are exposed below
 
             router["/ping"] = JSONResponse { _ -> Any in
                 ["status": "ok"]
