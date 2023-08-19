@@ -4,7 +4,9 @@ import Foundation
 // there a complex open source one, but it makes it harder to compile this simple one-file swift application
 let dateFormatter = DateFormatter()
 let programName = "focus-app"
-let logLevel = ProcessInfo.processInfo.environment["LOG_LEVEL"]?.uppercased() ?? "DEBUG"
+
+let defaultLogLevel = "INFO"
+let logLevel = ProcessInfo.processInfo.environment["LOG_LEVEL"]?.uppercased() ?? defaultLogLevel
 
 func logTimestamp() -> String {
     let now = Date()
