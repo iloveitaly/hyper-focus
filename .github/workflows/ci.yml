@@ -30,6 +30,7 @@ jobs:
           # when running within the context of a tag push
           check-mode: all
 
+      # TODO is there a way to set swift version explicitly?
       - name: setup Xcode version
         run: |
           ls /Applications
@@ -42,7 +43,7 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v4
         with:
-          github-token: ${{ secrets.github_token}}
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           skip-version-file: "true"
           pre-commit: bin/pre-commit.js
 
