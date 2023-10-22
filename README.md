@@ -10,6 +10,13 @@ In other words, if you are obsessive about personal productivity you can define 
 
 This is my first/only project in Swift, so feel to submit PRs to fix obvious things that should be better. [Here's what I learned while building this project.](http://mikebian.co/learning-swift-development-for-macos-by-building-a-website-blocker/)
 
+## Why do this?
+
+Time is the most valuable + scarce asset. Consumer companies are incentivized to steal your time. Fight back.
+
+- https://marco.org/2015/10/30/automatic-social-discipline
+- http://mikebian.co/tag/digital-minimalism/
+
 ## Installation
 
 ```shell
@@ -107,10 +114,9 @@ OPTIONS:
   -h, --help              Show help information.
 ```
 
-## Why do this?
+### Configuration
 
-- https://marco.org/2015/10/30/automatic-social-discipline
-- http://mikebian.co/tag/digital-minimalism/
+If you are running as root, you'll want to specify the full path to any shell scripts.
 
 ## Features
 
