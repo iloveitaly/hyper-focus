@@ -6,8 +6,7 @@ updates:
     schedule:
       interval: weekly
 
-  # TODO no support for swift yet
-  # - package-ecosystem: "swift"
-  #   directory: "/"
-  #   schedule:
-  #     interval: "weekly"
+  - package-ecosystem: swift
+    directory: /
+    schedule:
+      interval: weekly
