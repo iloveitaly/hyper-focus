@@ -112,14 +112,17 @@ class ScheduleManager {
     }
 
     func setSchedule(_ schedule: Configuration.ScheduleItem?) {
-        if schedule != self.schedule {
-            log("changing schedule to \(String(describing: schedule))")
-            // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
-            self.schedule = schedule
+        if schedule == self.schedule {
+            return
+        }
 
-            if schedule != nil, schedule!.start_script != nil {
-                TaskRunner.executeTaskWithName(schedule!.start_script!, "start_script")
-            }
+        log("changing schedule to \(String(describing: schedule))")
+
+        // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
+        self.schedule = schedule
+
+        if schedule != nil, schedule!.start_script != nil {
+            TaskRunner.executeTaskWithName(schedule!.start_script!, "start_script")
         }
     }
 
