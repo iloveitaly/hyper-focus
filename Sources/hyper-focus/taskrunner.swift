@@ -21,7 +21,7 @@ enum TaskRunner {
         }
 
         if executionLocks[taskName] == true {
-            log("Task \(taskName) is already running. Skipping execution.")
+            log("Task is already running. Skipping execution. task_name=\(taskName)")
             return
         }
 
@@ -42,10 +42,12 @@ enum TaskRunner {
             debug("command is executable, running directly")
             process.launchPath = expandedCommandPath
         } else {
-            process.arguments = ["-c", expandedCommandPath]
-            process.launchPath = "/bin/bash"
+            debug("command it not executable, running via bash")
+            process.arguments = [expandedCommandPath]
+            process.launchPath = "/bin/zsh"
         }
 
+        // set a timeout on the script
         let timer: DispatchSourceTimer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
         timer.schedule(deadline: .now() + taskTimeout)
         timer.setEventHandler {
@@ -61,7 +63,7 @@ enum TaskRunner {
         let status = process.terminationStatus
 
         if status != 0 {
-            error("script \(expandedCommandPath) exited with error code \(status)")
+            error("script exited and errored path=\(expandedCommandPath) code=\(status)")
         } else {
             log("script executed successfully")
         }
