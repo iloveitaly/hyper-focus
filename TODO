@@ -1,20 +1,19 @@
 ## Next
 
 - [ ] swiftformat needs to be updated to play well with swiftlint
-- [ ] Would be cool to have a regex match option, not sure how this would fit into the config schema
 - [ ] custom redirect page for browsers, could be a fun way to redirect to quotes or something
 - [ ] YouTube video about how it works
 - [ ] https://github.com/tingraldi/SwiftScripting/pull/24#pullrequestreview-1173211472
 - [ ] File watching for config changes
 - [ ] Allow different schedules on different days
 - [ ] Allow schedules to specify pause increments to limit the pauses available on specific schedules
+- [ ] all block/allow config should be optional, but something should be required!
+- [ ] rate limit pauses
 
 ## Future
 
-- [ ] support json config with comments
 - [ ] I wonder if there is a tool out there to generate a ui based off a json schema?
 - [ ] make a logo with AI? https://www.shopify.com/tools/logo-maker/onboarding/brand-values
 - [ ] If there are no events in a certain period of time, we should trigger an action anyway
 - [ ] swift verison in the repo
 - [ ] maybe build a nice little webpage like https://www.homerow.app
-- [ ] rate limit pauses

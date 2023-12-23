@@ -12,7 +12,7 @@ This is my first/only project in Swift, so feel to submit PRs to fix obvious thi
 
 ## Why do this?
 
-Time is the most valuable + scarce asset. Consumer companies are incentivized to steal your time. Fight back.
+Time is the most valuable + scarce asset. Companies are incentivized to steal your time. Fight back.
 
 - https://marco.org/2015/10/30/automatic-social-discipline
 - http://mikebian.co/tag/digital-minimalism/
@@ -122,7 +122,7 @@ If you are running as root, you'll want to specify the full path to any shell sc
 
 - Fast, CLI-oriented tool
 - [UI via Raycast](https://www.raycast.com/iloveitaly/hyper-focus)
-- Configuration in a simple JSON file ([here's an example](https://github.com/iloveitaly/dotfiles/blob/master/.config/focus/config.json))
+- Configuration in a simple JSON file ([here's an example](https://github.com/iloveitaly/dotfiles/blob/master/.config/focus/config.json)). You can [add comments to this JSON](https://json5.org)!
 - Very memory efficient, even over long periods of time
 - No weird hangs or freezes (Focus app had this issue)
 - Run scripts on sleep events (you don't need to rely on the abandoned sleepwatcher tool)
@@ -131,10 +131,10 @@ If you are running as root, you'll want to specify the full path to any shell sc
 
 ### Sleepwatching
 
-- Run a script on first wake of the day
+- Run a script on first wake of the day (custom algorithm to determine first wake)
+- Treat long periods of no activity as sleep
 - Run a script on each wake
 - Run script as privileged in order to edit key system files like `/etc/hosts`
-- Treat long periods of no activity as sleep
 
 #### What is 'first wake'?
 
@@ -152,8 +152,26 @@ Having a first wake script allows you to tie into something like [clean browsers
 
 - Block macOS applications without quitting them. This is implemented by hiding them when you switch to them.
 - "Block" websites by redirecting Chrome and Safari browsers to a page of your choosing when a banned URL is encountered.
-- Block hosts
+- Block hosts. Automatically adds `www.` variants to non-regex block hosts.
 - Block specific URLs, ignoring anchors, and allowing a partial/subset match on query strings.
+- Regex support
+
+#### Regex
+
+Regex support is a bit weird: add trailing and leading `/` to the block entry to indicate it's a regex. Think `sed`-style.
+
+Example:
+
+```json
+{
+  "block_hosts": [
+    // normal
+    "google.com",
+    // regex!
+    "/.*google..*/"
+  ]
+}
+```
 
 ## Non-Features
 
@@ -166,8 +184,9 @@ Having a first wake script allows you to tie into something like [clean browsers
 
 Instead of UI, I've opted to a simple HTTP API that can be used to power a [Raycast](https://www.raycast.com/iloveitaly/hyper-focus)-based UI.
 
-- `/reload` reload the configuration file
+- `/reload` reload the configuration file without restarting the process
 - `/pause` pause the currently running schedule
+- `/resume` resume the currently running schedule
 - `/override` force a blocking profile to run for a period of time
 - `/ping` is this thing on?
 - `/configurations` array of names of all blocking profiles. To change the order of the results, change the order of the inputs in your config file.
@@ -182,9 +201,7 @@ You can hit the API locally for testing using: `http localhost:9029/status`
 
 ## Tests
 
-Haha! Nope.
-
-This is a fun personal tool. Tests are boring, so I didn't write them.
+This is a fun personal tool. Tests are boring, so I didn't write many of them.
 
 Plus, writing tests in Swift seems to be a massive pain (no dynamic mocks!).
 
