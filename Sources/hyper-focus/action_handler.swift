@@ -21,7 +21,7 @@ enum ActionHandler {
 
     static func appAction(_ data: SwitchingActivity) -> Bool {
         if match(data.app, data.configuration.block_apps) {
-            if match(data.app, data.configuration.allow_apps) {
+            if match(data.app, data.configuration.allow_apps ?? []) {
                 log("app is in allow_apps, releasing")
                 return false
             }
@@ -64,7 +64,7 @@ enum ActionHandler {
         debug("checking urls for any blocked matches")
 
         let blockUrls = data.configuration.block_urls
-        let allowUrls = data.configuration.allow_urls
+        let allowUrls = data.configuration.allow_urls ?? []
 
         // note: the url takes precedence over the host, and the allow takes precedence over the block,
         // so if url matches allow_url we can automatically release
@@ -81,7 +81,7 @@ enum ActionHandler {
         debug("checking hosts for any blocked matches")
 
         let blockHosts = data.configuration.block_hosts
-        let allowHosts = data.configuration.allow_hosts
+        let allowHosts = data.configuration.allow_hosts ?? []
 
         // TODO: add 'www.' to all host entries which are not regex, this is not something users want to do manually!
         let blockHostsWithWWW = blockHosts.map { host in

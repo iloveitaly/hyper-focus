@@ -67,11 +67,7 @@ final class hyper_focusTests: XCTestCase {
             start_script: "/path/to/start_script.sh",
             block_hosts: ["example.com"],
             block_urls: ["example.org"],
-            block_apps: ["AppName"],
-
-            allow_hosts: [],
-            allow_urls: [],
-            allow_apps: []
+            block_apps: ["AppName"]
         )
 
         let testConfiguration = Configuration(
