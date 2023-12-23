@@ -20,14 +20,24 @@ enum ActionHandler {
     }
 
     static func appAction(_ data: SwitchingActivity) -> Bool {
-        if match(data.app, data.configuration.block_apps) {
-            if match(data.app, data.configuration.allow_apps ?? []) {
+        let allowApps = data.configuration.allow_apps
+        let hasAllowApps = allowApps != nil
+
+        // block list is only used if there is no allow list
+        if hasAllowApps {
+            if match(data.app, allowApps!) {
                 log("app is in allow_apps, releasing")
                 return false
+            } else {
+                log("app is not in allow_apps, blocking")
+                // TODO: sometimes this hide method does not work
+                NSWorkspace.shared.frontmostApplication!.hide()
+                return true
             }
+        }
 
+        if match(data.app, data.configuration.block_apps ?? []) {
             log("app is in block_apps, hiding application to prevent usage")
-
             // TODO: sometimes this hide method does not work
             NSWorkspace.shared.frontmostApplication!.hide()
             return true
@@ -61,9 +71,12 @@ enum ActionHandler {
         // thus if url matches allow_url we can automatically release, and if it doesn't but it matches block_url we can block
         // if it matches neither, we can continue to the host check
 
+        let allowModeEnabled = data.configuration.allow_hosts != nil || data.configuration.allow_urls != nil
+        debug("allow_mode_enabled: \(allowModeEnabled)")
+
         debug("checking urls for any blocked matches")
 
-        let blockUrls = data.configuration.block_urls
+        let blockUrls = data.configuration.block_urls ?? []
         let allowUrls = data.configuration.allow_urls ?? []
 
         // note: the url takes precedence over the host, and the allow takes precedence over the block,
@@ -80,7 +93,7 @@ enum ActionHandler {
 
         debug("checking hosts for any blocked matches")
 
-        let blockHosts = data.configuration.block_hosts
+        let blockHosts = data.configuration.block_hosts ?? []
         let allowHosts = data.configuration.allow_hosts ?? []
 
         // TODO: add 'www.' to all host entries which are not regex, this is not something users want to do manually!
@@ -107,6 +120,12 @@ enum ActionHandler {
 
         if match(host, blockHostsWithWWW) {
             error("blocked host, redirecting browser to block page")
+            blockTab(data.activeTab)
+            return true
+        }
+
+        if allowModeEnabled {
+            error("allow mode enabled, blocking by default")
             blockTab(data.activeTab)
             return true
         }

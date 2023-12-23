@@ -29,9 +29,9 @@ struct Configuration: Codable {
         var description: String?
         var schedule_only: Bool?
         var start_script: String?
-        var block_hosts: [String]
-        var block_urls: [String]
-        var block_apps: [String]
+        var block_hosts: [String]?
+        var block_urls: [String]?
+        var block_apps: [String]?
         var allow_hosts: [String]?
         var allow_urls: [String]?
         var allow_apps: [String]?
