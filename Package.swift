@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "hyper-focus",
     platforms: [
-        .macOS(.v12),
+        .macOS(.v13),
     ],
     dependencies: [
         // TODO: https://github.com/envoy/Embassy/pull/110
