@@ -115,9 +115,15 @@ class ApiServer {
                 return ["status": "ok"]
             }
 
+            router["/resume"] = JSONResponse { _ -> Any in
+                log("/resume")
+                self.scheduleManager.resumeBlocking()
+                return ["status": "ok"]
+            }
+
             // http -vvv POST http://localhost:8080/pause until=1667510271
             router["/pause"] = JSONResponse { environ -> Any in
-                log("pause route")
+                log("/pause")
 
                 var pauseUtil: Int?
 

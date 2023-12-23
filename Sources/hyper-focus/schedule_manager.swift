@@ -95,6 +95,11 @@ class ScheduleManager {
         endPause = end
     }
 
+    func resumeBlocking() {
+        log("resume blocking")
+        endPause = nil
+    }
+
     func schedules() -> [Configuration.ScheduleItem] {
         return configuration.schedule
     }
