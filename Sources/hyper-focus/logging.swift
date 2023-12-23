@@ -38,3 +38,8 @@ public func error(_ msg: String) {
     print("\(logPrefix("ERROR")) \(msg)")
     fflush(stdout)
 }
+
+// `error` is a reserved word inside a catch block
+public func errorLog(_ msg: String) {
+    error(msg)
+}
