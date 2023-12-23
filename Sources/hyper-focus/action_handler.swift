@@ -25,7 +25,9 @@ enum ActionHandler {
                 log("app is in allow_apps, releasing")
                 return false
             }
+
             log("app is in block_apps, hiding application to prevent usage")
+
             // TODO: sometimes this hide method does not work
             NSWorkspace.shared.frontmostApplication!.hide()
             return true
@@ -34,6 +36,7 @@ enum ActionHandler {
         return false
     }
 
+    // boolean represents if something was blocked
     static func browserAction(_ data: SwitchingActivity) -> Bool {
         guard let url = data.url else {
             log("url is empty, not doing anything")
@@ -45,19 +48,24 @@ enum ActionHandler {
             return false
         }
 
-        // note: allow always has precedence over block, and url has precedence over host
+        // NOTE: `allow_*` always has precedence over `block_*`, and url has precedence over host
+        //
         // possible "conflicting" configurations:
-        // {host}               {url}               {action}
-        // block                none | block        block
-        // none | allow         block               block
-        // block                allow               allow
+        //      {host}               {url}               {action}
+        //      block                none | block        block
+        //      none | allow         block               block
+        //      block                allow               allow
+        //
         // => release_condition = allow_url || allow_host && !block_url || !block_host && !block_url
+        //
         // thus if url matches allow_url we can automatically release, and if it doesn't but it matches block_url we can block
         // if it matches neither, we can continue to the host check
-        
+
         debug("checking urls for any blocked matches")
+
         let blockUrls = data.configuration.block_urls
         let allowUrls = data.configuration.allow_urls
+
         // note: the url takes precedence over the host, and the allow takes precedence over the block,
         // so if url matches allow_url we can automatically release
         // the urls in the config are expected to have less params, so they are considered the subset (no regex here)
@@ -71,9 +79,33 @@ enum ActionHandler {
         }
 
         debug("checking hosts for any blocked matches")
+
         let blockHosts = data.configuration.block_hosts
         let allowHosts = data.configuration.allow_hosts
-        if match(host, blockHosts) && !match(host, allowHosts) {
+
+        // TODO: add 'www.' to all host entries which are not regex, this is not something users want to do manually!
+        let blockHostsWithWWW = blockHosts.map { host in
+            if isRegexString(host) {
+                return host
+            } else {
+                return "www.\(host)"
+            }
+        }
+
+        let allowHostsWithWWW = allowHosts.map { host in
+            if isRegexString(host) {
+                return host
+            } else {
+                return "www.\(host)"
+            }
+        }
+
+        if match(host, allowHostsWithWWW) {
+            error("host is in allow_hosts, releasing")
+            return false
+        }
+
+        if match(host, blockHostsWithWWW) {
             error("blocked host, redirecting browser to block page")
             blockTab(data.activeTab)
             return true
@@ -81,14 +113,34 @@ enum ActionHandler {
 
         return false
     }
-    
-    static func match(_ str: String, _ regexpArray: [String]) -> Bool {
-        if regexpArray.count == 0 {
+
+    // the syntax we've chosen is a string starting and ending with `/` to indicate a regex expression
+    static func isRegexString(_ str: String) -> Bool {
+        return str.first == "/" && str.last == "/"
+    }
+
+    static func match(_ str: String, _ matchList: [String]) -> Bool {
+        if matchList.count == 0 {
             return false
         }
-        if let matchedPattern = regexpArray.first(where: { pattern in
-            let regex = try! NSRegularExpression(pattern: pattern)
-            return regex.firstMatch(in: str, range: NSRange(location: 0, length: str.utf16.count)) != nil
+
+        if let matchedPattern = matchList.first(where: { pattern in
+            var regexPattern: String
+
+            if !isRegexString(pattern) {
+                return str.contains(pattern)
+            } else {
+                // take out the leading & trailing /
+                regexPattern = String(pattern.dropFirst().dropLast())
+            }
+
+            do {
+                let regex = try Regex(regexPattern)
+                return try regex.firstMatch(in: str) != nil
+            } catch {
+                errorLog("invalid regex pattern: \(pattern)")
+                return false
+            }
         }) {
             debug("String \(str) matched pattern: \(matchedPattern)")
             return true
