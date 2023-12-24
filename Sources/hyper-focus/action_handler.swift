@@ -19,6 +19,11 @@ enum ActionHandler {
         return url?.host
     }
 
+    static func hideApp() {
+        // TODO: sometimes this hide method does not work
+        NSWorkspace.shared.frontmostApplication!.hide()
+    }
+
     static func appAction(_ data: SwitchingActivity) -> Bool {
         let allowApps = data.configuration.allow_apps
         let hasAllowApps = allowApps != nil
@@ -30,16 +35,15 @@ enum ActionHandler {
                 return false
             } else {
                 log("app is not in allow_apps, blocking")
-                // TODO: sometimes this hide method does not work
-                NSWorkspace.shared.frontmostApplication!.hide()
+                debug("allow_apps: \(allowApps!)")
+                hideApp()
                 return true
             }
         }
 
         if match(data.app, data.configuration.block_apps ?? []) {
             log("app is in block_apps, hiding application to prevent usage")
-            // TODO: sometimes this hide method does not work
-            NSWorkspace.shared.frontmostApplication!.hide()
+            hideApp()
             return true
         }
 

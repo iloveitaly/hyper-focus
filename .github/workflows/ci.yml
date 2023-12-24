@@ -1,7 +1,9 @@
 name: Build & Release
 
 on:
+  # allow manual runs for debugging purposes
   workflow_dispatch: {}
+
   push:
     branches:
       - main

@@ -11,14 +11,7 @@ class ScheduleManager {
     var overrideSchedule: Configuration.ScheduleItem?
     var plannedSchedule: Configuration.ScheduleItem?
 
-    let BLANK_SCHEDULE = Configuration.ScheduleItem(
-        block_hosts: [],
-        block_urls: [],
-        block_apps: [],
-        allow_hosts: [],
-        allow_urls: [],
-        allow_apps: []
-    )
+    let BLANK_SCHEDULE = Configuration.ScheduleItem()
 
     init(_ config: Configuration? = nil) {
         configuration = config ?? ConfigurationLoader.loadConfiguration()
