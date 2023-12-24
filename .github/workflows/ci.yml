@@ -46,7 +46,7 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v4
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GH_PERSONAL_TOKEN }}
           skip-version-file: "true"
           pre-commit: bin/pre-commit.js
 
@@ -70,6 +70,6 @@ jobs:
       - name: Update Homebrew formula
         uses: dawidd6/action-homebrew-bump-formula@v3
         with:
-          token: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+          token: ${{secrets.GH_PERSONAL_TOKEN}}
           tap: iloveitaly/homebrew-tap
           livecheck: true
