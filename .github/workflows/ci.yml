@@ -10,7 +10,7 @@ on:
     paths:
       - Sources/**/*
       - Package.*
-      - .github/*
+      - .github/**/*
 
     # TODO previously would manually tag,
     # tags:
