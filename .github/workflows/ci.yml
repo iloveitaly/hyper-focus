@@ -10,6 +10,7 @@ on:
     paths:
       - Sources/**/*
       - Package.*
+      - .github/*
 
     # TODO previously would manually tag,
     # tags:
@@ -19,9 +20,8 @@ permissions: read-all
 
 jobs:
   build:
-    # TODO need ventura macos version https://github.com/actions/runner-images/issues/6426 to fix weird test issue
-    #   https://github.com/actions/runner-images/issues/6642
-    runs-on: macos-latest
+    # TODO switch to macos-latest once that represents > 13
+    runs-on: macos-13
     steps:
       - name: Checkout
         uses: actions/checkout@v4
