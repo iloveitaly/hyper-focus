@@ -39,9 +39,11 @@ struct Configuration: Codable {
 
     var initial_wake: String?
     var wake: String?
+    var blocked_redirect_url: String?
     var schedule: [ScheduleItem]
 }
 
+var scheduleManager: ScheduleManager?
 var systemObserver: SystemObserver?
 var sleepWatcher: SleepWatcher?
 var apiServer: ApiServer?
@@ -67,10 +69,11 @@ public enum focus_app {
             return
         }
 
-        let scheduleManager = ScheduleManager()
-        systemObserver = SystemObserver(scheduleManager: scheduleManager)
-        sleepWatcher = SleepWatcher(scheduleManager: scheduleManager)
-        apiServer = ApiServer(scheduleManager: scheduleManager)
+        // NOTE this is hte main entrypoint of the application
+        scheduleManager = ScheduleManager()
+        systemObserver = SystemObserver(scheduleManager: scheduleManager!)
+        sleepWatcher = SleepWatcher(scheduleManager: scheduleManager!)
+        apiServer = ApiServer(scheduleManager: scheduleManager!)
     }
 }
 

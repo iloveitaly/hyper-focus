@@ -10,6 +10,9 @@
     "wake": {
       "type": "string"
     },
+    "blocked_redirect_url": {
+      "type": "string"
+    },
     "schedule": {
       "type": "array",
       "items": {

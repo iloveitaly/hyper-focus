@@ -208,8 +208,7 @@ enum ActionHandler {
     }
 
     static func blockTab(_ activeTab: BrowserTab?) {
-        // TODO: allow redirect to be configured
-        let redirectUrl: String? = "about:blank"
+        let redirectUrl = scheduleManager!.configuration.blocked_redirect_url ?? "about:blank"
 
         // TODO: I don't know how to more elegantly unwrap the enum here...
         switch activeTab {

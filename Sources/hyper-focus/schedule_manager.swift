@@ -11,7 +11,7 @@ class ScheduleManager {
     var overrideSchedule: Configuration.ScheduleItem?
     var plannedSchedule: Configuration.ScheduleItem?
 
-    let BLANK_SCHEDULE = Configuration.ScheduleItem()
+    let BLANK_PAUSE_SCHEDULE = Configuration.ScheduleItem()
 
     init(_ config: Configuration? = nil) {
         configuration = config ?? ConfigurationLoader.loadConfiguration()
@@ -128,9 +128,10 @@ class ScheduleManager {
     }
 
     func getSchedule() -> Configuration.ScheduleItem? {
-        // TODO: weird to have this check vs in the check poller, but we need a conditional to return BLANK_SCHEDULE
+        // TODO: weird to have this check vs in the check poller, but we need a conditional to return BLANK_PAUSE_SCHEDULE
         if endPause != nil, Date() < endPause! {
-            return BLANK_SCHEDULE
+            // if we are in a pause, return a blank schedule
+            return BLANK_PAUSE_SCHEDULE
         } else {
             endPause = nil
         }
