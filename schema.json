@@ -30,6 +30,12 @@
           "pause_limit": {
             "type": "number"
           },
+          "pause_options": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
           "schedule_only": {
             "type": "boolean"
           },

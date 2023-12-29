@@ -12,24 +12,17 @@ on:
       - Package.*
       - .github/**/*
 
-    # TODO previously would manually tag,
-    # tags:
-    #   - v* # Push events to matching v*, i.e. v1.0, v20.15.10
-
-# by default, permissions are read-only, read + write is required for git pushes
-permissions:
-  contents: write
-
 jobs:
   build:
     # TODO switch to macos-latest once that represents > 13
     runs-on: macos-13
+    env:
+      # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+      # https://stackoverflow.com/questions/60418323/triggering-a-new-workflow-from-another-workflow/60418414#60418414
+      GITHUB_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          # https://stackoverflow.com/questions/60418323/triggering-a-new-workflow-from-another-workflow/60418414#60418414
-          token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
@@ -53,7 +46,6 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v4
         with:
-          github-token: ${{ secrets.GH_PERSONAL_TOKEN }}
           skip-version-file: "true"
           pre-commit: bin/pre-commit.js
 
@@ -73,11 +65,9 @@ jobs:
           # output options: https://github.com/TriPSs/conventional-changelog-action#outputs
           body: ${{ steps.changelog.outputs.clean_changelog }}
           tag_name: ${{ steps.changelog.outputs.tag }}
-          token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Update Homebrew formula
         uses: dawidd6/action-homebrew-bump-formula@v3
         with:
-          token: ${{secrets.GH_PERSONAL_TOKEN}}
           tap: iloveitaly/homebrew-tap
           livecheck: true
