@@ -2,6 +2,7 @@ import Foundation
 
 class ScheduleManager {
     var configuration: Configuration
+    var pauseLimiter = RateLimiter()
 
     var schedule: Configuration.ScheduleItem?
     var endOverride: Date?
@@ -83,9 +84,15 @@ class ScheduleManager {
         }
     }
 
-    func pauseBlocking(_ end: Date) {
+    func pauseBlocking(_ end: Date) -> Bool {
+        if !pauseLimiter.allowed(type: "pause") {
+            error("pause limit reached, not pausing")
+            return false
+        }
+
         log("pause blocking until \(end)")
         endPause = end
+        return true
     }
 
     func resumeBlocking() {
@@ -121,6 +128,11 @@ class ScheduleManager {
 
         // TODO: there's probably some race condition risk here, but I'm too lazy to understand swift concurrency locking
         self.schedule = schedule
+
+        if schedule != nil {
+            // we want to set limit to nil if not set in schedule
+            pauseLimiter.limit = schedule!.pause_limit
+        }
 
         if schedule != nil, schedule!.start_script != nil {
             TaskRunner.executeTaskWithName(schedule!.start_script!, "start_script")

@@ -27,6 +27,9 @@
           "name": {
             "type": "string"
           },
+          "pause_limit": {
+            "type": "number"
+          },
           "schedule_only": {
             "type": "boolean"
           },

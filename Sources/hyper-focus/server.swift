@@ -147,9 +147,12 @@ class ApiServer {
 
                 // convert pauseUtil to date
                 let untilDate = Date(timeIntervalSince1970: TimeInterval(pauseUtil!))
-                self.scheduleManager.pauseBlocking(untilDate)
 
-                return ["status": "ok"]
+                if self.scheduleManager.pauseBlocking(untilDate) {
+                    return ["status": "ok"]
+                } else {
+                    return ["status": "error", "message": "blocked"]
+                }
             }
 
             try! server.start()
