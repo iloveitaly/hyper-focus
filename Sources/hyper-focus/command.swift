@@ -17,7 +17,7 @@ struct HyperFocus: ParsableCommand {
         if version {
             // we cannot get the latest tag version at compile time
             // https://stackoverflow.com/questions/27804227/using-compiler-variables-in-swift
-            print("v0.4.0")
+            print("v0.5.0")
             return
         }
 

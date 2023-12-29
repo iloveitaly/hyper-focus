@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/iloveitaly/hyper-focus/compare/v0.4.0...v0.5.0) (2023-12-29)
+
+
+### Features
+
+* adding pause rate limiter ([6f95693](https://github.com/iloveitaly/hyper-focus/commit/6f95693eff0d7f13ff547f12473130e50abefb0c))
+
+
+
 # [0.4.0](https://github.com/iloveitaly/hyper-focus/compare/v0.3.0...v0.4.0) (2023-12-24)
 
 
@@ -52,10 +61,6 @@
 * adding description and schedule_only flags to config ([b8061f6](https://github.com/iloveitaly/hyper-focus/commit/b8061f6b291352787d04c3aef99f2cfd759037ba))
 * increase task timeout to 10m ([ef2e175](https://github.com/iloveitaly/hyper-focus/commit/ef2e175b0cbe3f0976d5d415e7f975f3bcdc5e7f))
 * return all schedule data ([a3eb3ee](https://github.com/iloveitaly/hyper-focus/commit/a3eb3ee257c31c824e79cf6d5af891547c7fe67c))
-
-
-
-## [0.1.10](https://github.com/iloveitaly/hyper-focus/compare/v0.1.9...v0.1.10) (2023-04-19)
 
 
 
