@@ -39,7 +39,7 @@ jobs:
       - name: setup Xcode version
         run: |
           ls /Applications
-          sudo xcode-select -s /Applications/Xcode_14.2.app
+          sudo xcode-select -s /Applications/Xcode_15.1.0.app
 
       - name: Test
         run: swift test -vv
