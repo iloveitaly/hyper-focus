@@ -26,8 +26,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        env:
-          token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
@@ -53,6 +51,9 @@ jobs:
         with:
           skip-version-file: "true"
           pre-commit: bin/pre-commit.js
+          # NOTE if not provided, GITHUB_TOKEN is *not* used!
+          # https://github.com/TriPSs/conventional-changelog-action/blob/66cc91f84686286f21478f1f781ea8b34bdf0446/action.yml#L16
+          github-token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Build Release Binary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
