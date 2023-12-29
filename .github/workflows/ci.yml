@@ -12,6 +12,9 @@ on:
       - Package.*
       - .github/**/*
 
+permissions:
+  contents: read
+
 jobs:
   build:
     # TODO switch to macos-latest once that represents > 13
