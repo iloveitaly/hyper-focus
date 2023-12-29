@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/iloveitaly/hyper-focus/compare/v0.5.0...v0.5.1) (2023-12-29)
+
+
+### Bug Fixes
+
+* maybe fix release.published event firing ([51da49b](https://github.com/iloveitaly/hyper-focus/commit/51da49bbd4cc1905769960b2960627fcebe0478c))
+
+
+
 # [0.5.0](https://github.com/iloveitaly/hyper-focus/compare/v0.4.0...v0.5.0) (2023-12-29)
 
 
@@ -50,17 +59,6 @@
 ### Bug Fixes
 
 * thinking the computer is effectively sleeping, when it wasn't ([901fd4f](https://github.com/iloveitaly/hyper-focus/commit/901fd4ff88eb71b7c1784e7d7346732ab2f62478))
-
-
-
-# [0.2.0](https://github.com/iloveitaly/hyper-focus/compare/v0.1.10...v0.2.0) (2023-05-18)
-
-
-### Features
-
-* adding description and schedule_only flags to config ([b8061f6](https://github.com/iloveitaly/hyper-focus/commit/b8061f6b291352787d04c3aef99f2cfd759037ba))
-* increase task timeout to 10m ([ef2e175](https://github.com/iloveitaly/hyper-focus/commit/ef2e175b0cbe3f0976d5d415e7f975f3bcdc5e7f))
-* return all schedule data ([a3eb3ee](https://github.com/iloveitaly/hyper-focus/commit/a3eb3ee257c31c824e79cf6d5af891547c7fe67c))
 
 
 
