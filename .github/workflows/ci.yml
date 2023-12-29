@@ -68,6 +68,7 @@ jobs:
           # output options: https://github.com/TriPSs/conventional-changelog-action#outputs
           body: ${{ steps.changelog.outputs.clean_changelog }}
           tag_name: ${{ steps.changelog.outputs.tag }}
+          token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Update Homebrew formula
         uses: dawidd6/action-homebrew-bump-formula@v3
