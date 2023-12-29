@@ -1,6 +1,6 @@
 # Hyper Focus
 
-![Logo](icon.png)
+<img style="float:right" src="icon.png" alt="Logo"/>
 
 Hyper Focus is a command line tool that watches what you are doing on your computer and prevents you from doing distracting things.
 
