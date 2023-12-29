@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # https://stackoverflow.com/questions/60418323/triggering-a-new-workflow-from-another-workflow/60418414#60418414
+          token: ${{ secrets.GH_PERSONAL_TOKEN }}
 
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
@@ -38,7 +41,9 @@ jobs:
       # TODO is there a way to set swift version explicitly?
       - name: setup Xcode version
         run: |
+          # output list of xcode app versions to easily update the selected version
           ls /Applications
+
           sudo xcode-select -s /Applications/Xcode_15.1.0.app
 
       - name: Test

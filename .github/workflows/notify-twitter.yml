@@ -7,8 +7,9 @@ on:
   workflow_dispatch: null
   release:
     # publishes is fired when a release is created programmatically
+    # release must be created with a PAT, not the default token!
     # https://stackoverflow.com/questions/59319281/github-action-different-between-release-created-and-published
-    # must be created with a PAT if automated
+    # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs
     types: [published]
 
 jobs:
