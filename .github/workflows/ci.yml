@@ -47,7 +47,7 @@ jobs:
 
       - name: Conventional Changelog Action
         id: changelog
-        uses: TriPSs/conventional-changelog-action@v4
+        uses: TriPSs/conventional-changelog-action@v5
         with:
           skip-version-file: "true"
           pre-commit: bin/pre-commit.js
