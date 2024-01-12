@@ -15,7 +15,7 @@ struct SwitchingActivity: CustomStringConvertible {
     var url: String?
 
     var description: String {
-        return "SwitchingActivity: \(app) - \(title)"
+        return "SwitchingActivity: \(app) - \(title) - \(url)"
     }
 }
 

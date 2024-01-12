@@ -34,6 +34,11 @@ public func log(_ msg: String) {
     }
 }
 
+public func warn(_ msg: String) {
+    print("\(logPrefix("WARN")) \(msg)")
+    fflush(stdout)
+}
+
 public func error(_ msg: String) {
     print("\(logPrefix("ERROR")) \(msg)")
     fflush(stdout)

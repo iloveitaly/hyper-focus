@@ -53,7 +53,7 @@ enum ActionHandler {
     // boolean represents if something was blocked
     static func browserAction(_ data: SwitchingActivity) -> Bool {
         guard let url = data.url else {
-            log("url is empty, not doing anything")
+            warn("url is empty, not doing anything")
             return false
         }
 
@@ -165,10 +165,10 @@ enum ActionHandler {
                 return false
             }
         }) {
-            debug("String \(str) matched pattern: \(matchedPattern)")
+            debug("[match] '\(str)' matched pattern: \(matchedPattern)")
             return true
         } else {
-            debug("String \(str) did not match any pattern")
+            debug("[match] '\(str)' did not match any pattern \(matchList)")
             return false
         }
     }

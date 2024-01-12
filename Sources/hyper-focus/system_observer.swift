@@ -114,7 +114,7 @@ class SystemObserver {
     }
 
     @objc func focusedAppChanged() {
-        debug("Focused app changed")
+        debug("focused app changed")
 
         if observer != nil {
             CFRunLoopRemoveSource(
@@ -150,7 +150,9 @@ class SystemObserver {
                 if notification == kAXFocusedWindowChangedNotification as CFString {
                     application.focusedWindowChanged(axObserver, window: axElement)
                 } else {
+                    // TODO: had issue where changes were not notified properly and we always landed in this block
                     log("window title changed on it's own")
+
                     application.windowTitleChanged(
                         axObserver,
                         axElement: axElement,
