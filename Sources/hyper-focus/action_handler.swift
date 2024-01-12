@@ -103,19 +103,19 @@ enum ActionHandler {
         // TODO: add 'www.' to all host entries which are not regex, this is not something users want to do manually!
         let blockHostsWithWWW = blockHosts.map { host in
             if isRegexString(host) {
-                return host
+                return [host]
             } else {
-                return "www.\(host)"
+                return ["www.\(host)", host]
             }
-        }
+        }.flatMap { $0 }
 
         let allowHostsWithWWW = allowHosts.map { host in
             if isRegexString(host) {
-                return host
+                return [host]
             } else {
-                return "www.\(host)"
+                return ["www.\(host)", host]
             }
-        }
+        }.flatMap { $0 }
 
         if match(host, allowHostsWithWWW) {
             error("host is in allow_hosts, releasing")

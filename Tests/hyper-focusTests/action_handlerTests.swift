@@ -16,4 +16,6 @@ final class action_handlerTests: XCTestCase {
 
         XCTAssertEqual(true, ActionHandler.match("google.com/news/something", ["/^google.*/", "google.com/news"]))
     }
+
+    // TODO: test full stack browserAction
 }
