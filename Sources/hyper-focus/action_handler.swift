@@ -193,7 +193,7 @@ enum ActionHandler {
         // TODO: too big, should be a separate method!
         var queryIsSubset = true
         if let supersetQueryItems = supersetUrl.queryItems, let subsetQueryItems = subsetUrl.queryItems {
-            subsetQueryItems.forEach { subsetQueryItem in
+            for subsetQueryItem in subsetQueryItems {
                 if !supersetQueryItems.contains(subsetQueryItem) {
                     queryIsSubset = false
                 }
