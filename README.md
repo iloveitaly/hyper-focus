@@ -2,9 +2,7 @@
 
 <img style="float:right" src="icon.png" alt="Logo"/>
 
-Hyper Focus is a command line tool that watches what you are doing on your computer and prevents you from doing distracting things.
-
-It allows you define what "distracting things" are for you. For example, you might want to prevent yourself from using social media between 9am and 5pm. Or making certain google searches. Or using specific macOS applications. You can define what activities are distracting on a schedule.
+Hyper Focus is a command line tool that watches your computer activity and prevents you from doing distracting things.
 
 In other words, if you are obsessive about personal productivity you can define what you want a productive day to look like and then use Hyper Focus to enforce it.
 
@@ -132,7 +130,7 @@ If you are running as root, you'll want to specify the full path to any shell sc
 ### Sleepwatching
 
 - Run a script on first wake of the day (custom algorithm to determine first wake)
-- Treat long periods of no activity as sleep
+- Treats long periods of no activity as sleep
 - Run a script on each wake
 - Run script as privileged in order to edit key system files like `/etc/hosts`
 
@@ -150,11 +148,16 @@ Having a first wake script allows you to tie into something like [clean browsers
 
 ### Blocking
 
-- Block macOS applications without quitting them. This is implemented by hiding them when you switch to them.
+- Block macOS applications without quitting them. This is implemented by hiding them when you switch to them. They stay
+open so you don't lose your work, but you can't see them.
 - "Block" websites by redirecting Chrome and Safari browsers to a page of your choosing when a banned URL is encountered.
-- Block hosts. Automatically adds `www.` variants to non-regex block hosts.
-- Block specific URLs, ignoring anchors, and allowing a partial/subset match on query strings.
-- Regex support
+- Block hosts. Automatically adds `www.` variants to non-regex block hosts. If you block `youtube.com` it will also block `www.youtube.com`.
+- Block specific URLs, ignoring anchors, and allowing a partial/subset match on query strings. For instance, you may
+want to allow google.com but block google news. You can setup a block url of `https://www.google.com/search?tbm=nws` to
+achieve this. The `tbm=nws` query string indicates the google news tab. As long as that query param exists, the page
+will be blocked.
+- Regex support when matching against URLs. <!-- for instance -->
+- Allow mode. Block everything by default, except a whitelist of URLs and/or apps.
 
 #### Regex
 
