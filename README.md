@@ -49,6 +49,8 @@ Or, download a release build and run it manually.
 
 You'll need to grant accessibility permissions to the binary, which you can find via `brew which hyper-focus`. If scripts you have defined require root access, you'll also need to grant full disk access to the binary as well.
 
+If permissions get into a weird state, close the app, remove the application from the system permissions list, and then re-add it to the system permissions list.
+
 ### Running a Brew Service as Root
 
 You may want to run Hyper Focus as root. For instance, [if you are modifying the `/etc/hosts` file on wake](https://github.com/iloveitaly/dotfiles/blob/7209676edb8417436bf9e56f1137a0b23bfadf76/.config/focus/wake.sh#L23),
