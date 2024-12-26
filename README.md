@@ -151,13 +151,13 @@ Having a first wake script allows you to tie into something like [clean browsers
 ### Blocking
 
 - Block macOS applications without quitting them. This is implemented by hiding them when you switch to them. They stay
-open so you don't lose your work, but you can't see them.
+  open so you don't lose your work, but you can't see them.
 - "Block" websites by redirecting Chrome and Safari browsers to a page of your choosing when a banned URL is encountered.
 - Block hosts. Automatically adds `www.` variants to non-regex block hosts. If you block `youtube.com` it will also block `www.youtube.com`.
 - Block specific URLs, ignoring anchors, and allowing a partial/subset match on query strings. For instance, you may
-want to allow google.com but block google news. You can setup a block url of `https://www.google.com/search?tbm=nws` to
-achieve this. The `tbm=nws` query string indicates the google news tab. As long as that query param exists, the page
-will be blocked.
+  want to allow google.com but block google news. You can setup a block url of `https://www.google.com/search?tbm=nws` to
+  achieve this. The `tbm=nws` query string indicates the google news tab. As long as that query param exists, the page
+  will be blocked.
 - Regex support when matching against URLs. <!-- for instance -->
 - Allow mode. Block everything by default, except a whitelist of URLs and/or apps.
 
