@@ -17,8 +17,7 @@ permissions:
 
 jobs:
   build:
-    # TODO switch to macos-latest once that represents > 13
-    runs-on: macos-13
+    runs-on: macos-latest
     env:
       # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
       # https://stackoverflow.com/questions/60418323/triggering-a-new-workflow-from-another-workflow/60418414#60418414
