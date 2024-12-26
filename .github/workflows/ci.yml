@@ -39,7 +39,7 @@ jobs:
           # output list of xcode app versions to easily update the selected version
           ls /Applications
 
-          sudo xcode-select -s /Applications/Xcode_15.1.0.app
+          sudo xcode-select -s /Applications/Xcode_16.1.0.app
 
       - name: Test
         run: swift test -vv
