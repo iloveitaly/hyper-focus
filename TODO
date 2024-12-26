@@ -1,7 +1,6 @@
 ## Next
 
 - [ ] swiftformat needs to be updated to play well with swiftlint
-- [ ] custom redirect page for browsers, could be a fun way to redirect to quotes or something
 - [ ] YouTube video about how it works
 - [ ] https://github.com/tingraldi/SwiftScripting/pull/24#pullrequestreview-1173211472
 - [ ] File watching for config changes
@@ -9,11 +8,13 @@
 - [ ] Allow schedules to specify pause increments to limit the pauses available on specific schedules
 - [ ] all block/allow config should be optional, but something should be required!
 - [ ] rate limit pauses
+- [ ] cron-like script execution
+- [ ] one thing: see if I can manipulate racyast commands from the command line. THis would enable me to modify the onething command. Maybe build this into hyper focus and create a little server to display the one target goal for the day?
 
 ## Future
 
 - [ ] I wonder if there is a tool out there to generate a ui based off a json schema?
-- [ ] make a logo with AI? https://www.shopify.com/tools/logo-maker/onboarding/brand-values
 - [ ] If there are no events in a certain period of time, we should trigger an action anyway
 - [ ] swift verison in the repo
 - [ ] maybe build a nice little webpage like https://www.homerow.app
+- [ ] end_script on schedule item

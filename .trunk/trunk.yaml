@@ -1,25 +1,25 @@
 version: 0.1
 cli:
-  version: 1.19.0
+  version: 1.22.8
 plugins:
   sources:
     - id: trunk
-      ref: v1.4.2
+      ref: v1.6.6
       uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - checkov@3.1.57
-    - trivy@0.48.3
-    - trufflehog@3.63.8
-    - oxipng@9.0.0
-    - yamllint@1.33.0
-    - shellcheck@0.9.0
+    - checkov@3.2.344
+    - trivy@0.58.1
+    - trufflehog@3.88.0
+    - oxipng@9.1.3
+    - yamllint@1.35.1
+    - shellcheck@0.10.0
     - shfmt@3.6.0
-    - swiftformat@0.53.0
-    - prettier@3.1.1
-    - actionlint@1.6.26
-    - markdownlint@0.38.0
-    - gitleaks@8.18.1
+    - swiftformat@0.54.4
+    - prettier@3.4.2
+    - actionlint@1.7.4
+    - markdownlint@0.43.0
+    - gitleaks@8.21.2
     - git-diff-check
   ignore:
     - linters: [swiftlint]
@@ -35,7 +35,7 @@ runtimes:
   enabled:
     - python@3.10.8
     - go@1.21.0
-    - node@18.12.1
+    - node@18.20.5
 actions:
   enabled:
     - trunk-fmt-pre-commit
