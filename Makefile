@@ -1,6 +1,10 @@
 SHELL := zsh
 .PHONY: build build-release github-release local-release clean
 
+trunk:
+	trunk upgrade
+	trunk fmt
+
 build:
 	swift build -v
 

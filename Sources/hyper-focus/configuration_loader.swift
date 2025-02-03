@@ -18,6 +18,8 @@ enum ConfigurationLoader {
             configPath = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".config/focus/config.json")
         }
 
+        // TODO: maybe validate against JSON schema?
+
         debug("Loading configuration from \(configPath!.absoluteString)")
 
         let configData = try! Data(contentsOf: configPath!)

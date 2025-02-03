@@ -18,6 +18,8 @@ class RateLimiter {
         var typeStamps = timestamps[type, default: []]
         typeStamps = typeStamps.filter { $0 > oneHourAgo }
 
+        debug("found \(typeStamps.count) actions of type '\(type)' in the last hour")
+
         if typeStamps.count < limit! {
             typeStamps.append(now)
             timestamps[type] = typeStamps
