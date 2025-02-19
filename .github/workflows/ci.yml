@@ -12,6 +12,7 @@ on:
       - Package.*
       - .github/**/*
 
+# we have a custom token specified, so we don't need to increase permissions here
 permissions:
   contents: read
 
@@ -76,3 +77,4 @@ jobs:
         with:
           tap: iloveitaly/homebrew-tap
           livecheck: true
+          token: ${{ secrets.GH_PERSONAL_TOKEN }}
