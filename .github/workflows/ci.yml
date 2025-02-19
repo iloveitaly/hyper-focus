@@ -12,9 +12,9 @@ on:
       - Package.*
       - .github/**/*
 
-# we have a custom token specified, so we don't need to increase permissions here
+# required to `git push` on the repo
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -40,7 +40,7 @@ jobs:
           # output list of xcode app versions to easily update the selected version
           ls /Applications
 
-          sudo xcode-select -s /Applications/Xcode_16.1.0.app
+          sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
       - name: Test
         run: swift test -vv
