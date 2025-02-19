@@ -1,5 +1,6 @@
 import Foundation
 
+// limit the number of pauses within an hour
 class RateLimiter {
     private var timestamps: [String: [Date]] = [:]
 

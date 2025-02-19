@@ -40,6 +40,8 @@ struct Configuration: Codable {
         var allow_apps: [String]?
     }
 
+    var pause_limit: Int?
+    var pause_options: [Int]?
     var initial_wake: String?
     var wake: String?
     var blocked_redirect_url: String?

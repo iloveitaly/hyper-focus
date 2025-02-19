@@ -29,7 +29,15 @@ enum ConfigurationLoader {
         let decoder = JSONDecoder()
         decoder.allowsJSON5 = true
 
-        let config = try! decoder.decode(Configuration.self, from: configData)
+        var config = try! decoder.decode(Configuration.self, from: configData)
+
+        // if root `pause_*` config is set, inherit it each schedule
+        config.schedule = config.schedule.map { item in
+            var newItem = item
+            newItem.pause_limit = newItem.pause_limit ?? config.pause_limit
+            newItem.pause_options = newItem.pause_options ?? config.pause_options
+            return newItem
+        }
 
         return config
     }
