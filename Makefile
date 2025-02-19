@@ -11,6 +11,10 @@ build:
 build-release:
 	swift build -v -c release --arch arm64 --arch x86_64 --disable-sandbox
 
+package:
+	swift package resolve
+	swift package update
+
 github-release:
 	bin/release
 
