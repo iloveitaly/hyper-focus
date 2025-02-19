@@ -12,7 +12,7 @@ let package = Package(
         // TODO: https://github.com/envoy/Embassy/pull/110
         .package(url: "https://github.com/envoy/Ambassador", from: "4.0.0"),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.3"),
-        .package(url: "https://github.com/rymcol/SwiftCron.git", branch: "master"),
+        .package(url: "https://github.com/alchemy-swift/cron.git", from: "2.3.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -21,7 +21,7 @@ let package = Package(
             name: "hyper-focus",
             dependencies: [
                 "Ambassador",
-                "SwiftCron",
+                .product(name: "Cron", package: "cron"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
