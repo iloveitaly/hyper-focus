@@ -19,12 +19,30 @@
       }
     },
     {
+      "identity" : "perfect-thread",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PerfectlySoft/Perfect-Thread.git",
+      "state" : {
+        "revision" : "a50b9a33f08fce638f33ae3121613fe499cc23ec",
+        "version" : "3.0.7"
+      }
+    },
+    {
       "identity" : "swift-argument-parser",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
         "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
         "version" : "1.5.0"
+      }
+    },
+    {
+      "identity" : "swiftcron",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rymcol/SwiftCron.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "b2f1845dd442c37928109f5d9125916f167e3982"
       }
     }
   ],
