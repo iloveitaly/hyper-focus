@@ -1,3 +1,20 @@
+# [0.6.0](https://github.com/iloveitaly/hyper-focus/compare/v0.5.1...v0.6.0) (2025-02-19)
+
+
+### Bug Fixes
+
+* add pause_options to schedule output ([b424c7e](https://github.com/iloveitaly/hyper-focus/commit/b424c7eaa93210b1c905defe9e67ff85c999d40f))
+* gh repo permissions for automated release ([818b2a5](https://github.com/iloveitaly/hyper-focus/commit/818b2a55da9aaef6776724cf11d59464a5be39c7))
+* non-www hosts not being properly picked up ([3453a40](https://github.com/iloveitaly/hyper-focus/commit/3453a40e199c8ef1735d38dbce4d9851b275af43))
+
+
+### Features
+
+* add recurring task management with cron scheduling ([07d7b0a](https://github.com/iloveitaly/hyper-focus/commit/07d7b0a3b0dcce988c77f9451875bc17b86a80bd))
+* inherit pause settings for schedule in config loader ([d5fd07b](https://github.com/iloveitaly/hyper-focus/commit/d5fd07bbe615716db759ef048f16ffe16ff14296))
+
+
+
 ## [0.5.1](https://github.com/iloveitaly/hyper-focus/compare/v0.5.0...v0.5.1) (2023-12-29)
 
 
@@ -50,15 +67,6 @@
 ### Features
 
 * support json5 config format ([7add980](https://github.com/iloveitaly/hyper-focus/commit/7add980bce18915b7c576203e11e1928f3921f29))
-
-
-
-## [0.2.1](https://github.com/iloveitaly/hyper-focus/compare/v0.2.0...v0.2.1) (2023-05-18)
-
-
-### Bug Fixes
-
-* thinking the computer is effectively sleeping, when it wasn't ([901fd4f](https://github.com/iloveitaly/hyper-focus/commit/901fd4ff88eb71b7c1784e7d7346732ab2f62478))
 
 
 
