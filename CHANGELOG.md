@@ -1,3 +1,12 @@
+## [0.6.1](https://github.com/iloveitaly/hyper-focus/compare/v0.6.0...v0.6.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* bind to all interfaces ([fa03b4f](https://github.com/iloveitaly/hyper-focus/commit/fa03b4f0d5d18c7750dfe06d54ca604a496e879a))
+
+
+
 # [0.6.0](https://github.com/iloveitaly/hyper-focus/compare/v0.5.1...v0.6.0) (2025-02-19)
 
 
@@ -58,15 +67,6 @@
 * give priority to allow_url ([e619d85](https://github.com/iloveitaly/hyper-focus/commit/e619d85ecd0bef4ca3a03aa38607af25c7a11eb7))
 * support custom block url redirect ([1f53aa8](https://github.com/iloveitaly/hyper-focus/commit/1f53aa8d083f58343b1c388686fbce9658e3d16b))
 * update schema.json ([6e3c550](https://github.com/iloveitaly/hyper-focus/commit/6e3c55007e409523d7aee94f3019c284b779309f))
-
-
-
-# [0.3.0](https://github.com/iloveitaly/hyper-focus/compare/v0.2.1...v0.3.0) (2023-05-19)
-
-
-### Features
-
-* support json5 config format ([7add980](https://github.com/iloveitaly/hyper-focus/commit/7add980bce18915b7c576203e11e1928f3921f29))
 
 
 
