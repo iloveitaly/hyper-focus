@@ -17,7 +17,7 @@ class ApiServer {
         Task {
             let loop = try! SelectorEventLoop(selector: try! KqueueSelector())
             let router = Router()
-            let server = DefaultHTTPServer(eventLoop: loop, port: serverPort, app: router.app)
+            let server = DefaultHTTPServer(eventLoop: loop, interface: "0.0.0.0", port: serverPort, app: router.app)
 
             // https://github.com/envoy/Ambassador/blob/master/Ambassador/Responses/JSONResponse.swift
             // all API endpoints are exposed below
@@ -155,7 +155,10 @@ class ApiServer {
                 }
             }
 
+            log("starting server on port \(serverPort)")
+
             try! server.start()
+            log("Server started at http://[::1]:\(server.port)")
             loop.runForever()
         }
     }
