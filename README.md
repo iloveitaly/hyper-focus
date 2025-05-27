@@ -1,7 +1,5 @@
 # Hyper Focus
 
-<img style="float:right" src="icon.png" alt="Logo"/>
-
 Hyper Focus is a command line tool that watches your computer activity and prevents you from doing distracting things.
 
 In other words, if you are obsessive about personal productivity you can define what you want a productive day to look like and then use Hyper Focus to enforce it.
@@ -210,8 +208,9 @@ This is a fun personal tool. Tests are boring, so I didn't write many of them.
 
 Plus, writing tests in Swift seems to be a massive pain (no dynamic mocks!).
 
-## Inspiration
+## Inspiration / Related
 
 - https://github.com/qiuosier/SleepTight
 - https://heyfocus.com
 - https://github.com/ActivityWatch/aw-watcher-window
+- https://ebb.cool
