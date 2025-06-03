@@ -5,11 +5,15 @@ trunk:
 	trunk upgrade
 	trunk fmt
 
+test:
+	swift test -vv
+
 build:
 	swift build -v
 
 build-release:
-	swift build -v -c release --arch arm64 --arch x86_64 --disable-sandbox
+	swift build -v -c release --arch arm64 --arch x86_64
+	# I had the `--disable-sandbox` flag in place here, but I'm not sure entirely why...
 
 package:
 	swift package resolve

@@ -43,7 +43,7 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_16.2.0.app
 
       - name: Test
-        run: swift test -vv
+        run: make test
 
       - name: Conventional Changelog Action
         id: changelog
@@ -57,7 +57,7 @@ jobs:
 
       - name: Build Release Binary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        run: swift build -v -c release --arch arm64 --arch x86_64
+        run: make build-release
 
       - name: Zip Release Binary
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
