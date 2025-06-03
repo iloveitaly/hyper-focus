@@ -45,9 +45,13 @@ tail -f $(brew --prefix)/var/log/hyper_focus.log
 
 Or, download a release build and run it manually.
 
+### Accessibility Permissions
+
 You'll need to grant accessibility permissions to the binary, which you can find via `brew which hyper-focus`. If scripts you have defined require root access, you'll also need to grant full disk access to the binary as well.
 
 If permissions get into a weird state, close the app, remove the application from the system permissions list, and then re-add it to the system permissions list.
+
+Also, remember that if you are building the binary locally and running it in your terminal, your _terminal application_ needs accessibility permissions.
 
 ### Running a Brew Service as Root
 
