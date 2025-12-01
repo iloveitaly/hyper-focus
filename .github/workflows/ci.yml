@@ -25,7 +25,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GH_PERSONAL_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Trunk Check
         uses: trunk-io/trunk-action@v1
