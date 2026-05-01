@@ -65,7 +65,7 @@ jobs:
 
       - name: Release
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: hyper-focus.zip
           # output options: https://github.com/TriPSs/conventional-changelog-action#outputs
